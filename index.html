@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>UNKNOWN — Interactive AU (Full Extended)</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  :root{
+    --bg:#000;--card:#1c1c1e;--card2:#2c2c2e;--line:#38383a;
+    --txt:#fff;--dim:#8e8e93;--accent:#0a84ff;
+    --red:#ff453a;--green:#30d158;--orange:#ff9f0a;--purple:#bf5af2;
+  }
+  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;background:#0a0a0a;color:var(--txt);overflow:hidden;}
+  body{display:flex;align-items:center;justify-content:center;}
+
+  .phone{
+    position:relative;width:390px;height:844px;max-width:100vw;max-height:100vh;
+    background:var(--bg);border-radius:44px;overflow:hidden;
+    box-shadow:0 0 0 10px #1a1a1a,0 0 0 12px #333,0 30px 80px rgba(0,0,0,.9),0 0 120px rgba(191,90,242,.08);
+  }
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:160px;height:32px;background:#000;border-radius:0 0 20px 20px;z-index:900;}
+  .status-bar{
+    position:absolute;top:0;left:0;right:0;height:48px;z-index:850;
+    display:flex;align-items:center;justify-content:space-between;padding:14px 28px 0;
+    font-size:14px;font-weight:600;pointer-events:none;color:#fff;
+  }
+  .status-bar .right{display:flex;gap:5px;align-items:center;}
+
+  .story-menu{
+    position:absolute;inset:0;z-index:1000;
+    background:linear-gradient(160deg,#1a0b2e 0%,#0a0a0a 50%,#000 100%);
+    display:flex;flex-direction:column;overflow:hidden;
+    transition:opacity .5s,transform .5s;
+  }
+  .story-menu.hide{opacity:0;transform:scale(1.08);pointer-events:none;}
+  .sm-head{padding:70px 24px 20px;text-align:center;flex-shrink:0;}
+  .sm-title{
+    font-size:34px;letter-spacing:10px;font-weight:700;
+    text-shadow:2px 0 var(--red),-2px 0 #0ff;animation:glitch 2.5s infinite;
+  }
+  @keyframes glitch{0%,90%,100%{transform:translate(0)}92%{transform:translate(-2px,1px)}94%{transform:translate(2px,-1px)}96%{transform:translate(-1px,0)}}
+  .sm-sub{font-size:11px;color:var(--dim);letter-spacing:3px;margin-top:8px;}
+  .sm-list{
+    flex:1;overflow-y:auto;padding:8px 20px 40px;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .sm-list::-webkit-scrollbar{width:0;}
+  .story-card{
+    background:rgba(28,28,30,.85);border:1px solid var(--line);
+    border-radius:18px;padding:16px 18px;cursor:pointer;
+    transition:.2s;position:relative;overflow:hidden;
+  }
+  .story-card::before{
+    content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--red);
+  }
+  .story-card:hover,.story-card:active{transform:scale(.98);background:rgba(44,44,46,.9);}
+  .story-card .sc-num{
+    position:absolute;top:12px;right:16px;font-size:11px;color:var(--dim);
+    font-weight:600;letter-spacing:1px;
+  }
+  .story-card .sc-title{font-size:16px;font-weight:700;margin-bottom:5px;padding-right:40px;}
+  .story-card .sc-desc{font-size:12px;color:var(--dim);line-height:1.5;}
+  .story-card .sc-tag{
+    display:inline-block;font-size:10px;padding:3px 9px;border-radius:20px;
+    background:rgba(255,69,58,.15);color:#ff8a8a;margin-top:9px;font-weight:600;
+    letter-spacing:.5px;
+  }
+  .sc-tag.zombie{background:rgba(48,209,88,.15);color:#6ee787;}
+  .sc-tag.ghost{background:rgba(191,90,242,.15);color:#d0a2ff;}
+  .sc-tag.found{background:rgba(255,159,10,.15);color:#ffc266;}
+  .sc-tag.mirror{background:rgba(10,132,255,.15);color:#6cb6ff;}
+  .sc-tag.school{background:rgba(255,69,58,.15);color:#ff8a8a;}
+  .sc-tag.house{background:rgba(142,142,147,.15);color:#c7c7cc;}
+
+  .lock{
+    position:absolute;inset:0;z-index:800;display:flex;flex-direction:column;
+    background:#000 center/cover no-repeat;
+    transition:opacity .6s,transform .6s;
+  }
+  .lock::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(160deg,rgba(10,5,20,.75),rgba(0,0,0,.85));
+    z-index:0;
+  }
+  .lock > *{position:relative;z-index:1;}
+  .lock.unlocked{opacity:0;transform:scale(1.1);pointer-events:none;}
+  .lock-time{margin-top:80px;text-align:center;}
+  .lock-time .h{font-size:74px;font-weight:200;letter-spacing:-2px;line-height:1;}
+  .lock-time .d{font-size:15px;color:var(--dim);margin-top:6px;font-weight:500;}
+  .lock .glitch{
+    text-align:center;margin-top:34px;font-size:11px;letter-spacing:8px;
+    color:rgba(255,255,255,.2);font-weight:700;animation:flicker 3s infinite;
+  }
+  @keyframes flicker{0%,100%{opacity:.15}50%{opacity:.4}}
+  .lock-bottom{margin-top:auto;padding:0 24px 34px;}
+  .pass-dots{display:flex;gap:14px;justify-content:center;margin-bottom:28px;}
+  .dot{width:13px;height:13px;border-radius:50%;border:1.5px solid #fff;transition:.2s;}
+  .dot.on{background:#fff;}
+  .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 24px;}
+  .key{
+    width:72px;height:72px;margin:0 auto;border-radius:50%;
+    background:rgba(255,255,255,.12);backdrop-filter:blur(10px);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-size:26px;font-weight:400;cursor:pointer;transition:.15s;user-select:none;
+  }
+  .key:active{background:rgba(255,255,255,.3);transform:scale(.94);}
+  .key small{font-size:9px;letter-spacing:2px;color:var(--dim);margin-top:1px;}
+  .key.blank{background:transparent;cursor:default;}
+  .key.cancel{font-size:14px;font-weight:500;}
+  .lock-hint{text-align:center;margin-top:18px;font-size:12px;color:var(--dim);}
+  .back-menu{
+    position:absolute;top:52px;left:20px;z-index:20;
+    color:var(--accent);font-size:14px;cursor:pointer;font-weight:600;
+    background:rgba(0,0,0,.4);padding:6px 12px;border-radius:20px;
+    backdrop-filter:blur(10px);
+  }
+
+  .home{
+    position:absolute;inset:0;padding:64px 24px 0;overflow-y:auto;
+    background:#0a0a0a center/cover no-repeat;
+    opacity:0;pointer-events:none;transition:opacity .5s;
+  }
+  .home::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.85));
+    z-index:0;
+  }
+  .home > *{position:relative;z-index:1;}
+  .home.show{opacity:1;pointer-events:auto;}
+  .home::-webkit-scrollbar{display:none;}
+  .home-title{text-align:center;margin-bottom:26px;}
+  .home-title .story{font-size:15px;font-weight:600;}
+  .home-title .sub{font-size:11px;color:var(--dim);letter-spacing:3px;margin-top:2px;}
+  .widgets{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:26px;}
+  .widget{background:rgba(28,28,30,.85);backdrop-filter:blur(10px);border-radius:20px;padding:16px;border:1px solid var(--line);cursor:pointer;transition:.2s;}
+  .widget:active{transform:scale(.96);}
+  .widget .w-top{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--dim);margin-bottom:8px;}
+  .widget .big{font-size:32px;font-weight:300;}
+  .widget .loc{font-size:13px;font-weight:600;}
+  .widget .desc{font-size:12px;color:var(--dim);margin-top:2px;}
+  .widget.horror{background:linear-gradient(135deg,rgba(42,10,10,.9),rgba(28,0,0,.9));border-color:#4a1010;}
+  .widget .lock-msg{font-size:11px;color:#ff6b6b;letter-spacing:2px;margin-top:8px;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+  .app-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 16px;padding-bottom:120px;}
+  .app{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;}
+  .app .icon{width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 6px 16px rgba(0,0,0,.5);transition:.15s;}
+  .app:active .icon{transform:scale(.9);}
+  .app .label{font-size:11px;color:#eee;text-align:center;line-height:1.2;}
+  .app .badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+  .i-notes{background:linear-gradient(180deg,#ffd60a,#ff9f0a);}
+  .i-photos{background:linear-gradient(180deg,#ff375f,#bf5af2,#0a84ff);}
+  .i-cal{background:#fff;color:#000;font-weight:600;font-size:20px;}
+  .i-maps{background:linear-gradient(180deg,#30d158,#0a84ff);}
+  .i-files{background:linear-gradient(180deg,#0a84ff,#5e5ce6);}
+  .i-gmail{background:#fff;}
+  .i-msg{background:linear-gradient(180deg,#30d158,#0a9e3a);}
+  .i-call{background:linear-gradient(180deg,#30d158,#0a9e3a);}
+  .i-safari{background:linear-gradient(180deg,#0a84ff,#5e5ce6);}
+  .i-camera{background:linear-gradient(180deg,#8e8e93,#3a3a3c);}
+  .i-photo{background:linear-gradient(180deg,#ffd60a,#ff9f0a);}
+  .icon-wrap{position:relative;}
+
+  .appview{
+    position:absolute;inset:0;z-index:700;background:#000;
+    display:flex;flex-direction:column;
+    transform:translateY(100%);transition:transform .45s cubic-bezier(.32,.72,0,1);
+  }
+  .appview.open{transform:translateY(0);}
+  .av-head{padding:60px 20px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);background:#111;flex-shrink:0;}
+  .back-btn{color:var(--accent);font-size:26px;cursor:pointer;line-height:1;padding:4px 8px 4px 0;}
+  .av-title{font-size:20px;font-weight:700;}
+  .av-body{flex:1;overflow-y:auto;padding:18px 20px 40px;}
+  .av-body::-webkit-scrollbar{width:0;}
+
+  .note-item{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer;}
+  .note-item .n-top{display:flex;justify-content:space-between;font-size:15px;font-weight:600;}
+  .note-item .n-top span{color:var(--dim);font-size:12px;font-weight:400;}
+  .note-item .n-snip{font-size:12px;color:var(--dim);margin-top:5px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .note-item .n-date{font-size:11px;color:#5a5a5e;margin-top:6px;}
+  .section-label{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin:18px 0 4px;}
+
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;margin-top:10px;}
+  .cal-grid .cw{font-size:10px;color:var(--dim);font-weight:600;}
+  .cal-grid .cd{font-size:13px;padding:7px 0;border-radius:8px;cursor:pointer;}
+  .cal-grid .cd.today{background:var(--red);font-weight:700;}
+  .cal-grid .cd.muted{color:#3a3a3c;}
+  .cal-event{background:var(--card);border-radius:12px;padding:12px 14px;margin-top:12px;border-left:3px solid var(--red);}
+  .cal-event .ce-t{font-size:14px;font-weight:600;}
+  .cal-event .ce-s{font-size:12px;color:var(--dim);margin-top:3px;}
+
+  .chat-header{padding:14px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);background:#111;flex-shrink:0;}
+  .chat-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#2a0a2a,#6b106b);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .chat-header .ch-info{flex:1;}
+  .chat-header .ch-name{font-size:15px;font-weight:600;}
+  .chat-header .ch-status{font-size:11px;color:var(--dim);}
+  .chat-header .ch-status.online{color:var(--green);}
+  .chat-body{flex:1;overflow-y:auto;padding:16px 16px 20px;display:flex;flex-direction:column;gap:6px;}
+  .chat-body::-webkit-scrollbar{width:0;}
+  .msg-row{display:flex;margin-bottom:2px;animation:msgIn .25s ease;}
+  @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .msg-row.me{justify-content:flex-end;}
+  .bubble{max-width:78%;padding:9px 14px;border-radius:18px;font-size:14px;line-height:1.45;word-wrap:break-word;}
+  .msg-row .bubble{background:var(--card2);border-bottom-left-radius:5px;}
+  .msg-row.me .bubble{background:linear-gradient(180deg,#0a84ff,#0060df);border-bottom-right-radius:5px;}
+  .msg-time{text-align:center;font-size:11px;color:var(--dim);margin:14px 0 8px;}
+  .typing-indicator{display:flex;gap:4px;padding:12px 16px;background:var(--card2);border-radius:18px;border-bottom-left-radius:5px;width:fit-content;margin-bottom:6px;}
+  .typing-indicator span{width:7px;height:7px;border-radius:50%;background:var(--dim);animation:typing 1.4s infinite;}
+  .typing-indicator span:nth-child(2){animation-delay:.2s;}
+  .typing-indicator span:nth-child(3){animation-delay:.4s;}
+  @keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+  .chat-input-area{padding:10px 12px 24px;border-top:1px solid var(--line);background:#111;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;}
+  .chat-input-area textarea{flex:1;background:var(--card2);border:1px solid var(--line);border-radius:20px;padding:10px 16px;color:#fff;font-size:14px;font-family:inherit;resize:none;outline:none;max-height:100px;line-height:1.4;}
+  .chat-input-area textarea::placeholder{color:var(--dim);}
+  .send-btn{width:36px;height:36px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;}
+  .send-btn:active{transform:scale(.9);}
+  .send-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .choices{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding:0 2px;}
+  .choice-btn{background:rgba(10,132,255,.15);border:1px solid rgba(10,132,255,.4);color:#6cb6ff;padding:11px 16px;border-radius:14px;font-size:13px;cursor:pointer;text-align:left;transition:.15s;font-family:inherit;line-height:1.4;}
+  .choice-btn:active{background:rgba(10,132,255,.3);transform:scale(.98);}
+  .choice-btn.danger{border-color:rgba(255,69,58,.5);color:#ff8a8a;background:rgba(255,69,58,.1);}
+  .choice-btn.danger:active{background:rgba(255,69,58,.25);}
+
+  .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
+  .photo{aspect-ratio:1;border-radius:4px;cursor:pointer;position:relative;overflow:hidden;background-size:cover;background-position:center;}
+  .photo::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent);}
+  .p1{background:linear-gradient(135deg,#2a0a0a,#6b1010);}
+  .p2{background:linear-gradient(135deg,#0a0a2a,#10106b);}
+  .p3{background:linear-gradient(135deg,#1a0a2a,#4a1a6b);}
+  .p4{background:linear-gradient(135deg,#0a2a1a,#106b3a);}
+  .p5{background:linear-gradient(135deg,#2a2a0a,#6b6b10);}
+  .p6{background:linear-gradient(135deg,#2a0a1a,#6b104a);}
+  .p7{background:linear-gradient(135deg,#0a1a2a,#104a6b);}
+  .p8{background:linear-gradient(135deg,#1a1a1a,#3a3a3a);}
+  .p9{background:linear-gradient(135deg,#2a0a0a,#101010);}
+
+  .call-screen{text-align:center;padding-top:60px;}
+  .call-avatar{width:110px;height:110px;border-radius:50%;margin:0 auto 18px;background:linear-gradient(135deg,#2a0a2a,#6b106b);display:flex;align-items:center;justify-content:center;font-size:44px;animation:callPulse 2s infinite;}
+  @keyframes callPulse{0%,100%{box-shadow:0 0 0 0 rgba(191,90,242,.4)}50%{box-shadow:0 0 0 18px rgba(191,90,242,0)}}
+  .call-name{font-size:26px;font-weight:600;}
+  .call-status{color:var(--dim);font-size:14px;margin-top:6px;}
+  .call-actions{display:flex;gap:60px;justify-content:center;margin-top:70px;}
+  .call-btn{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;}
+  .call-decline{background:var(--red);}
+  .call-accept{background:var(--green);}
+
+  .safari-bar{display:flex;gap:8px;padding:10px 14px;background:#1c1c1e;border-radius:12px;margin-bottom:16px;}
+  .safari-bar input{flex:1;background:transparent;border:none;color:var(--txt);font-size:14px;outline:none;}
+  .horror-text{font-size:14px;line-height:1.8;color:#ddd;}
+  .horror-text .warn{color:var(--red);font-weight:600;margin:16px 0;font-size:13px;}
+  .horror-text .credit{font-size:11px;color:#666;margin-top:20px;line-height:1.6;}
+  .glitch-title{font-size:34px;letter-spacing:10px;text-align:center;margin:20px 0;color:#fff;text-shadow:2px 0 var(--red),-2px 0 #0ff;animation:glitch 2.5s infinite;}
+
+  .overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:600;opacity:0;pointer-events:none;transition:.3s;}
+  .overlay.show{opacity:1;pointer-events:auto;}
+
+  .notif{position:absolute;top:14px;left:14px;right:14px;z-index:950;background:rgba(40,40,42,.95);backdrop-filter:blur(20px);border-radius:18px;padding:14px 16px;transform:translateY(-120%);transition:.5s cubic-bezier(.32,.72,0,1);border:1px solid var(--line);display:flex;gap:12px;align-items:center;}
+  .notif.show{transform:translateY(0);}
+  .notif .n-icon{width:38px;height:38px;border-radius:9px;background:linear-gradient(180deg,#30d158,#0a9e3a);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .notif .n-txt{flex:1;}
+  .notif .n-title{font-size:13px;font-weight:600;}
+  .notif .n-body{font-size:12px;color:var(--dim);margin-top:1px;}
+  .notif .n-time{font-size:11px;color:var(--dim);}
+
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .shake{animation:shake .4s;}
+
+  @media (max-width:420px){
+    .phone{border-radius:0;box-shadow:none;width:100vw;height:100vh;}
+    .notch{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="notch"></div>
+
+  <div class="status-bar">
+    <div class="left" id="statusTime">21:05</div>
+    <div class="right"><span>📶</span><span>📡</span><span>🔋</span></div>
+  </div>
+
+  <div class="notif" id="notif">
+    <div class="n-icon">💬</div>
+    <div class="n-txt">
+      <div class="n-title">Unknown</div>
+      <div class="n-body">apakah kamu sudah siap?</div>
+    </div>
+    <div class="n-time">now</div>
+  </div>
+
+  <div class="story-menu" id="storyMenu">
+    <div class="sm-head">
+      <div class="sm-title">UNKNOWN</div>
+      <div class="sm-sub">PILIH ALUR CERITA</div>
+    </div>
+    <div class="sm-list" id="storyList"></div>
+  </div>
+
+  <div class="lock" id="lock" style="background-image:url('https://files.catbox.moe/givmu8.jpg');">
+    <div class="back-menu" onclick="backToMenu()">‹ Alur</div>
+    <div class="lock-time">
+      <div class="h" id="lockClock">21:05</div>
+      <div class="d" id="lockDate">Wednesday, October 28</div>
+    </div>
+    <div class="glitch" id="lockStoryLabel">U N K N O W N</div>
+    <div class="lock-bottom">
+      <div class="pass-dots" id="dots">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="keypad" id="keypad">
+        <div class="key" data-k="1">1<small></small></div>
+        <div class="key" data-k="2">2<small>ABC</small></div>
+        <div class="key" data-k="3">3<small>DEF</small></div>
+        <div class="key" data-k="4">4<small>GHI</small></div>
+        <div class="key" data-k="5">5<small>JKL</small></div>
+        <div class="key" data-k="6">6<small>MNO</small></div>
+        <div class="key" data-k="7">7<small>PQRS</small></div>
+        <div class="key" data-k="8">8<small>TUV</small></div>
+        <div class="key" data-k="9">9<small>WXYZ</small></div>
+        <div class="key cancel" data-k="cancel">Cancel</div>
+        <div class="key" data-k="0">0<small></small></div>
+        <div class="key blank" data-k="del">⌫</div>
+      </div>
+      <div class="lock-hint">Masukkan 6 digit kode sandi</div>
+    </div>
+  </div>
+
+  <div class="home" id="home" style="background-image:url('https://files.catbox.moe/0s3mih.jpg');">
+    <div class="home-title">
+      <div class="story" id="homeStoryName">Your Story</div>
+      <div class="sub" id="homeStorySub">UNKNOWN · AU</div>
+    </div>
+
+    <div class="widgets">
+      <div class="widget" onclick="openApp('weather')">
+        <div class="w-top"><span>Jakarta</span><span>☀️</span></div>
+        <div class="big">23°</div>
+        <div class="desc">Clear</div>
+      </div>
+      <div class="widget horror" onclick="openApp('safari')">
+        <div class="w-top"><span>⚠️ Warning</span><span>🌙</span></div>
+        <div class="loc">Checkpoint</div>
+        <div class="lock-msg">5 CHECKPOINT LOCKED</div>
+      </div>
+    </div>
+
+    <div class="app-grid">
+      <div class="app" onclick="openApp('notes')"><div class="icon-wrap"><div class="icon i-notes">📝</div></div><div class="label">Notes</div></div>
+      <div class="app" onclick="openApp('photos')"><div class="icon-wrap"><div class="icon i-photos">🌸</div></div><div class="label">Photos</div></div>
+      <div class="app" onclick="openApp('calendar')"><div class="icon-wrap"><div class="icon i-cal" id="calIcon">28</div></div><div class="label">Calendar</div></div>
+      <div class="app" onclick="openApp('maps')"><div class="icon-wrap"><div class="icon i-maps">🗺️</div></div><div class="label">Maps</div></div>
+      <div class="app" onclick="openApp('files')"><div class="icon-wrap"><div class="icon i-files">📁</div></div><div class="label">Files</div></div>
+      <div class="app" onclick="openApp('gmail')"><div class="icon-wrap"><div class="icon i-gmail">✉️</div></div><div class="label">Gmail</div></div>
+      <div class="app" onclick="openApp('messages')">
+        <div class="icon-wrap"><div class="icon i-msg">💬</div><div class="badge" id="msgBadge">1</div></div>
+        <div class="label">Messages</div>
+      </div>
+      <div class="app" onclick="openApp('call')"><div class="icon-wrap"><div class="icon i-call">📞</div></div><div class="label">Phone</div></div>
+      <div class="app" onclick="openApp('safari')"><div class="icon-wrap"><div class="icon i-safari">🧭</div></div><div class="label">Safari</div></div>
+      <div class="app" onclick="openApp('camera')"><div class="icon-wrap"><div class="icon i-camera">📷</div></div><div class="label">Camera</div></div>
+      <div class="app" onclick="openApp('photos')"><div class="icon-wrap"><div class="icon i-photo">🖼️</div></div><div class="label">Gallery</div></div>
+      <div class="app" onclick="openApp('settings')"><div class="icon-wrap"><div class="icon" style="background:linear-gradient(180deg,#8e8e93,#3a3a3c)">⚙️</div></div><div class="label">Settings</div></div>
+    </div>
+  </div>
+
+  <div class="appview" id="appview">
+    <div class="av-head">
+      <div class="back-btn" onclick="closeApp()">‹</div>
+      <div class="av-title" id="avTitle">App</div>
+    </div>
+    <div class="av-body" id="avBody"></div>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="closeApp()"></div>
+</div>
+
+<script>
+/* =========================================================
+   WALLPAPER
+   ========================================================= */
+const WALL_LOCK = 'https://files.catbox.moe/givmu8.jpg';
+const WALL_HOME = 'https://files.catbox.moe/0s3mih.jpg';
+const EXTRA_IMG = 'https://files.catbox.moe/13cd7y.jpg';
+
+/* =========================================================
+   DAFTAR 7 ALUR
+   ========================================================= */
+const STORIES = [
+  { id:'forest', title:'Hutan Terkutuk', desc:'Terjebak di hutan bersama 7 teman. 2 di antaranya adalah pembunuh berdarah dingin.', tag:'HUTAN', tagClass:'found', icon:'🌲' },
+  { id:'zombie', title:'Zombie Outbreak', desc:'Dunia hancur oleh wabah zombie. Hanya kamu dan 4 temanmu yang tersisa.', tag:'ZOMBIE', tagClass:'zombie', icon:'🧟' },
+  { id:'mirror', title:'Cermin Retak', desc:'Pantulanmu di cermin mulai bergerak sendiri. Dan ia ingin keluar.', tag:'HORROR', tagClass:'mirror', icon:'🪞' },
+  { id:'school', title:'Sekolah Terbengkalai', desc:'Masuk ke sekolah yang sudah 20 tahun ditutup. Pintunya tak mau terbuka lagi.', tag:'HORROR', tagClass:'school', icon:'🏫' },
+  { id:'house', title:'Rumah Tua', desc:'Warisan nenek. Tapi setiap tengah malam ada suara dari loteng.', tag:'HORROR', tagClass:'house', icon:'🏚️' },
+  { id:'ghost', title:'Hantu Anak Kecil', desc:'Anak kecil menangis di jalan sepi. Ia memegang fotomu saat kecil.', tag:'GHOST', tagClass:'ghost', icon:'👻' },
+  { id:'void', title:'Ruang Hampa', desc:'Bangun di ruangan putih tanpa pintu bersama 6 orang. Salah satunya bukan manusia.', tag:'MYSTERY', tagClass:'mirror', icon:'🌀' }
+];
+
+/* =========================================================
+   STORY MENU
+   ========================================================= */
+let currentStoryId = null;
+
+function renderStoryMenu(){
+  document.getElementById('storyList').innerHTML = STORIES.map((s,i) => `
+    <div class="story-card" onclick="pickStory('${s.id}')">
+      <div class="sc-num">${s.icon} ALUR ${i+1}</div>
+      <div class="sc-title">${s.title}</div>
+      <div class="sc-desc">${s.desc}</div>
+      <div class="sc-tag ${s.tagClass}">${s.tag}</div>
+    </div>
+  `).join('');
+}
+
+function pickStory(id){
+  currentStoryId = id;
+  const story = STORIES.find(s => s.id === id);
+  document.getElementById('lockStoryLabel').textContent = story.icon + ' ' + story.title.toUpperCase();
+  document.getElementById('homeStoryName').textContent = story.title;
+  document.getElementById('homeStorySub').textContent = story.tag + ' · AU';
+  document.getElementById('storyMenu').classList.add('hide');
+  document.getElementById('lock').classList.remove('unlocked');
+  document.getElementById('home').classList.remove('show');
+  passcode = '';
+  updateDots();
+}
+
+function backToMenu(){
+  document.getElementById('storyMenu').classList.remove('hide');
+  document.getElementById('lock').classList.add('unlocked');
+  document.getElementById('home').classList.remove('show');
+  passcode = '';
+  updateDots();
+}
+
+/* =========================================================
+   PASSCODE 6 DIGIT
+   ========================================================= */
+const CORRECT_PASS = "210528";
+let passcode = "";
+const dots = document.querySelectorAll('.dot');
+
+function updateDots(){
+  dots.forEach((d,i)=> d.classList.toggle('on', i < passcode.length));
+}
+
+document.getElementById('keypad').addEventListener('click', (e)=>{
+  const key = e.target.closest('.key');
+  if(!key) return;
+  const k = key.dataset.k;
+  if(k === 'cancel'){ passcode=''; updateDots(); return; }
+  if(k === 'del'){ passcode = passcode.slice(0,-1); updateDots(); return; }
+  if(passcode.length >= 6) return;
+  passcode += k;
+  updateDots();
+  if(passcode.length === 6) setTimeout(checkPass, 250);
+});
+
+function checkPass(){
+  if(passcode === CORRECT_PASS){
+    document.getElementById('lock').classList.add('unlocked');
+    document.getElementById('home').classList.add('show');
+    setTimeout(()=>showNotif('Unknown','apakah kamu sudah siap?', 4500), 900);
+  } else {
+    const l = document.getElementById('lock');
+    l.classList.add('shake');
+    setTimeout(()=>{ l.classList.remove('shake'); passcode=''; updateDots(); }, 450);
+  }
+}
+
+function showNotif(title, body, dur){
+  const n = document.getElementById('notif');
+  n.querySelector('.n-title').textContent = title;
+  n.querySelector('.n-body').textContent = body;
+  n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'), dur);
+}
+
+/* =========================================================
+   CLOCK
+   ========================================================= */
+function updateClock(){
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const clock = hh+':'+mm;
+  document.getElementById('lockClock').textContent = clock;
+  document.getElementById('statusTime').textContent = clock;
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('lockDate').textContent = days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate();
+  document.getElementById('calIcon').textContent = now.getDate();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* =========================================================
+   APP STATIS
+   ========================================================= */
+const APP_DATA = {
+  notes: { title:"Notes", html:`
+    <div class="section-label">Today</div>
+    <div class="note-item"><div class="n-top">survival log <span>23:58</span></div><div class="n-snip">kalau aku gak selamat, tolong cari tahu siapa pembunuh di antara kami. aku curiga...</div><div class="n-date">Notes</div></div>
+    <div class="section-label">Yesterday</div>
+    <div class="note-item"><div class="n-top">jangan tidur <span>03:12</span></div><div class="n-snip">ada yang berjalan di luar tenda. aku dengar langkah kaki. bukan hewan. bukan angin.</div><div class="n-date">Notes</div></div>
+    <div class="note-item"><div class="n-top">what if <span>21:00</span></div><div class="n-snip">what if</div><div class="n-date">Notes</div></div>
+    <div class="section-label">Previous 7 Days</div>
+    <div class="note-item"><div class="n-top">yang mulia, rumah kami hilang <span>Saturday</span></div><div class="n-snip">kami salah apa, yang mulia?</div><div class="n-date">Notes</div></div>
+    <div class="note-item"><div class="n-top">win or lose (draft) <span>12/10/2026</span></div><div class="n-snip">tengah malam, api menjilat langit hitam dengan warna jingga yang kejam, memantul di dinding-dinding rumah mewah yang kini terlalap kelam.</div><div class="n-date">Notes</div></div>
+    <div class="note-item"><div class="n-top">metakritik (draft) <span>10/09/2026</span></div><div class="n-snip">apa itu norma? apakah itu adalah sebuah hal transaksional yang bisa dibuang-milikkan saat dua pihak teratas berjabat tangan?</div><div class="n-date">Notes</div></div>
+    <div class="note-item"><div class="n-top">ruam <span>14/11/2025</span></div><div class="n-snip">pada hari ini, telah tumbuh sebuah awal pada ujung terakhir.</div><div class="n-date">Notes</div></div>
+    <div style="text-align:center;font-size:12px;color:#5a5a5e;margin-top:20px;">8 Notes</div>
+  `},
+  photos: { title:"Photos", html:`
+    <div style="display:flex;gap:16px;font-size:13px;color:var(--dim);margin-bottom:14px;overflow-x:auto;">
+      <span style="color:#fff;font-weight:600;">Recents 42</span><span>Favorites 5</span><span>Dump 37</span>
+    </div>
+    <div class="photo-grid">
+      <div class="photo p1"></div><div class="photo p2"></div><div class="photo p3"></div>
+      <div class="photo p4"></div><div class="photo p5"></div><div class="photo p6"></div>
+      <div class="photo p7"></div><div class="photo p8"></div><div class="photo p9"></div>
+      <div class="photo p2"></div><div class="photo p6"></div><div class="photo p4"></div>
+    </div>
+  `},
+  calendar: { title:"Calendar", html:`
+    <div style="font-size:22px;font-weight:700;margin-bottom:4px;">October 2026</div>
+    <div style="font-size:12px;color:var(--dim);">S M T W T F S</div>
+    <div class="cal-grid">
+      ${[...Array(31)].map((_,i)=>{
+        const d=i+1, isToday = d===28;
+        return `<div class="cd ${isToday?'today':''}">${d}</div>`;
+      }).join('')}
+    </div>
+    <div style="font-size:15px;font-weight:700;margin-top:24px;">Wednesday, October 28</div>
+    <div class="cal-event"><div class="ce-t">Survival</div><div class="ce-s">21.00 · Lokasi tidak diketahui</div></div>
+    <div class="cal-event" style="border-left-color:var(--red);"><div class="ce-t">⚠ Jangan keluar</div><div class="ce-s">21.05 · ???</div></div>
+  `},
+  maps: { title:"Maps", html:`
+    <div class="safari-bar"><span>🔍</span><input placeholder="Search Maps" readonly></div>
+    <div class="section-label">Recents</div>
+    <div class="note-item"><div class="n-top">Hutan Terkutuk</div><div class="n-snip">Lokasi tidak diketahui</div></div>
+    <div class="note-item"><div class="n-top">Kosong</div><div class="n-snip">Tidak ada sinyal</div></div>
+    <div style="margin-top:20px;height:180px;border-radius:14px;background:linear-gradient(135deg,#0a2a1a,#0a0a0a);display:flex;align-items:center;justify-content:center;font-size:40px;">📍</div>
+  `},
+  files: { title:"Files", html:`
+    <div class="safari-bar"><span>🔍</span><input placeholder="Search" readonly></div>
+    <div class="section-label">Recents</div>
+    <div class="note-item"><div class="n-top">📄 SelamatUlangTahunKwonOhyul.pdf</div><div class="n-snip">17 Aug · ryulkim@gmail.com</div></div>
+    <div class="note-item"><div class="n-top">📁 Dump</div><div class="n-snip">37 items</div></div>
+    <div class="note-item"><div class="n-top">📁 Hidden</div><div class="n-snip">🔒 locked</div></div>
+  `},
+  gmail: { title:"Gmail", html:`
+    <div class="safari-bar"><span>🔍</span><input placeholder="Search in mail" readonly></div>
+    <div class="section-label">Primary</div>
+    <div class="note-item"><div class="n-top">Unknown <span>21:05</span></div><div class="n-snip">aku tahu kamu di mana. jangan bergerak.</div></div>
+    <div class="note-item"><div class="n-top">Tumblr <span>19 Aug</span></div><div class="n-snip">Your account has been logged into. Hopefully it was you.</div></div>
+    <div class="note-item"><div class="n-top">Medium <span>14 Aug</span></div><div class="n-snip">Stats for your stories: Aug 6—Aug 13.</div></div>
+  `},
+  call: { title:"Phone", html:`
+    <div class="call-screen">
+      <div class="call-avatar">👤</div>
+      <div class="call-name">Unknown</div>
+      <div class="call-status" id="callStatus">FaceTime Video…</div>
+      <div class="call-actions">
+        <div class="call-btn call-decline" onclick="declineCall()">📵</div>
+        <div class="call-btn call-accept" onclick="acceptCall()">📞</div>
+      </div>
+      <div style="margin-top:40px;font-size:12px;color:var(--dim);line-height:1.7;padding:0 20px;">
+        Panggilan masuk dari nomor tak dikenal.<br><span style="color:var(--red);">Jangan dijawab jika tidak yakin.</span>
+      </div>
+    </div>
+  `},
+  safari: { title:"Safari", html:`
+    <div class="safari-bar"><span>🔒</span><input value="unknown.rinai.workers.dev" readonly></div>
+    <div class="glitch-title">UNKNOWN</div>
+    <div style="text-align:center;font-size:11px;color:#666;letter-spacing:2px;margin-bottom:20px;">A LNGSHOT HORROR INTERACTIVE AU by hujan</div>
+    <div class="horror-text">
+      <p>tolong sertakan credit <b style="color:#fff;">@midtales</b> dari x jika ingin share au ini ke platform lain, dan jangan upload full. terima kasih.</p>
+      <p class="warn">⚠ jika ingin melakukan checkpoint, buka aplikasi safari. terdapat 5 checkpoint di sana.</p>
+      <p>kalau kode tidak bisa dimuat, artinya limit harian server sudah habis. limit akan direset setiap hari jam 07.00 WIB.</p>
+      <div style="margin:24px 0;padding:16px;background:#1c0000;border-left:3px solid var(--red);border-radius:10px;font-size:13px;color:#ff8a8a;line-height:1.8;">
+        <b>CHECKPOINT:</b><br>1. Checkpoint 1 — 🔒 locked<br>2. Checkpoint 2 — 🔒 locked<br>3. Checkpoint 3 — 🔒 locked<br>4. Checkpoint 4 — 🔒 locked<br>5. Checkpoint 5 — 🔒 locked
+      </div>
+      <p class="credit">© hujan · @midtales · jangan upload full.</p>
+    </div>
+  `},
+  weather: { title:"Weather", html:`
+    <div style="text-align:center;padding-top:10px;">
+      <div style="font-size:20px;font-weight:600;">Jakarta</div>
+      <div style="font-size:72px;font-weight:200;letter-spacing:-3px;">23°</div>
+      <div style="font-size:15px;color:var(--dim);">Clear</div>
+      <div style="font-size:13px;color:var(--dim);margin-top:4px;">H: 31° · L: 23°</div>
+    </div>
+    <div style="margin-top:30px;background:linear-gradient(135deg,#1a0b2e,#0a0a0a);border-radius:16px;padding:16px;border:1px solid var(--line);">
+      <div style="font-size:12px;color:var(--dim);">⚠ Cuaca malam ini</div>
+      <div style="font-size:14px;margin-top:6px;">Langit gelap. Angin kencang. Bau hangus tercium dari arah timur.</div>
+    </div>
+  `},
+  camera: { title:"Camera", html:`
+    <div style="aspect-ratio:3/4;border-radius:20px;background:linear-gradient(180deg,#0a0a0a,#1a0a0a);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background-image:url('${EXTRA_IMG}');background-size:cover;background-position:center;">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);"></div>
+      <div style="position:absolute;bottom:20px;font-size:12px;color:#fff;letter-spacing:2px;z-index:1;">NO SIGNAL</div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:20px;">
+      <div style="width:64px;height:64px;border-radius:50%;border:3px solid #fff;display:flex;align-items:center;justify-content:center;">
+        <div style="width:52px;height:52px;border-radius:50%;background:#fff;"></div>
+      </div>
+    </div>
+  `},
+  settings: { title:"Settings", html:`
+    <div class="note-item"><div class="n-top">👤 Survivor</div><div class="n-snip">Apple Account, iCloud, Media & Purchases</div></div>
+    <div class="note-item"><div class="n-top">📶 Wi-Fi</div><div class="n-snip">Connected to "UNKNOWN"</div></div>
+    <div class="note-item"><div class="n-top">🔔 Notifications</div><div class="n-snip">Unknown · ON</div></div>
+    <div class="note-item"><div class="n-top">🔒 Privacy & Security</div><div class="n-snip">1 checkpoint locked</div></div>
+    <div class="note-item"><div class="n-top">📱 General</div><div class="n-snip">Version 21.05</div></div>
+  `}
+};
+
+/* =========================================================
+   =========================================================
+   ALUR CERITA PANJANG (7 ALUR)
+   =========================================================
+   ========================================================= */
+
+const CHAT_STORIES = {
+
+/* =========================================================
+   ALUR 1: HUTAN TERKUTUK (7 TEMAN, 2 PEMBUNUH)
+   Panjang: ~50 node, 12 ending
+   ========================================================= */
+forest: {
+  start:{ from:'them', text:'kamu masih bangun? aku gak bisa tidur semalaman', autoNext:'f2', delay:900 },
+  f2:{ from:'them', text:'kita udah 2 hari terjebak di hutan ini. signal hilang. gak ada jalan keluar', autoNext:'f3', delay:1300 },
+  f3:{ from:'them', text:'ada 8 orang di sini. aku, kamu, dan 6 lainnya. tenda kita di tengah lapangan', autoNext:'f4', delay:1300 },
+  f4:{ from:'them', text:'tapi... aku nemu sesuatu tadi malam. kamu harus lihat', autoNext:'f5', delay:1400 },
+  f5:{ from:'them', text:'baju berdarah di belakang tenda. bukan darah hewan. ini darah manusia', choices:[
+    {label:'Cek lokasi baju itu sekarang', next:'f_check1'},
+    {label:'Kumpulkan semua orang, cek satu-satu', next:'f_gather1'},
+    {label:'Diam, amati dulu siapa yang mencurigakan', next:'f_watch1'}
+  ]},
+
+  /* ===== CABANG A: CEK LOKASI ===== */
+  f_check1:{ from:'me', text:'jangan gerak. aku ke sana sekarang', autoNext:'f_check2', delay:800 },
+  f_check2:{ from:'them', text:'aku ikut. jangan sendirian', autoNext:'f_check3', delay:1000 },
+  f_check3:{ from:'them', text:'...ada jejak kaki di tanah lembap. tiga orang. dua dewasa, satu kecil', autoNext:'f_check4', delay:1500 },
+  f_check4:{ from:'them', text:'tunggu. itu bukan jejak kaki. itu seretan. sesuatu diseret ke arah sungai', autoNext:'f_check5', delay:1500 },
+  f_check5:{ from:'them', text:'kita ikuti? atau balik?', choices:[
+    {label:'Ikuti seretan ke sungai', next:'f_river1'},
+    {label:'Balik ke camp, bahaya', next:'f_back1'}
+  ]},
+
+  f_river1:{ from:'me', text:'ikuti. kita harus tahu', autoNext:'f_river2', delay:900 },
+  f_river2:{ from:'them', text:'(kalian menyusuri sungai selama 20 menit)', autoNext:'f_river3', delay:1600 },
+  f_river3:{ from:'them', text:'ada tubuh... oh tuhan. itu Rian. dia... dia udah gak bernyawa', autoNext:'f_river4', delay:1800 },
+  f_river4:{ from:'them', text:'luka di lehernya. rapi. sekali tebas. ini bukan hewan. ini manusia', autoNext:'f_river5', delay:1600 },
+  f_river5:{ from:'them', text:'dari 8 orang, sekarang tinggal 7. dan 2 di antaranya adalah pembunuh', autoNext:'f_river6', delay:1600 },
+  f_river6:{ from:'them', text:'kita harus balik dan beri tahu yang lain. atau... jangan beri tahu dulu', choices:[
+    {label:'Beri tahu semua orang', next:'f_tell1'},
+    {label:'Simpan rahasia ini dulu', next:'f_secret1'}
+  ]},
+
+  f_tell1:{ from:'me', text:'kita kumpulkan semua. sekarang', autoNext:'f_tell2', delay:900 },
+  f_tell2:{ from:'them', text:'(kamu mengumpulkan 7 orang di tengah camp)', autoNext:'f_tell3', delay:1400 },
+  f_tell3:{ from:'them', text:'semua panik. saling curiga. dua orang langsung terlibat pertengkaran', autoNext:'f_tell4', delay:1500 },
+  f_tell4:{ from:'them', text:'tiba-tiba lampu senter mati. gelap total. dan ada suara... seseorang berlari', autoNext:'f_tell5', delay:1700 },
+  f_tell5:{ from:'them', text:'lampu nyala lagi. satu orang hilang. Dita. dan ada darah di tanah', end:true, endText:'🔦 Kamu memberi tahu semua. Kepanikan membuat satu orang hilang. Pembunuh bergerak cepat.' },
+
+  f_secret1:{ from:'me', text:'jangan bilang siapa-siapa dulu. kita selidiki sendiri', autoNext:'f_secret2', delay:900 },
+  f_secret2:{ from:'them', text:'oke. besok pagi kita periksa tas semua orang saat mereka sarapan', autoNext:'f_secret3', delay:1500 },
+  f_secret3:{ from:'them', text:'(pagi berikutnya, kamu memeriksa tas satu per satu secara diam-diam)', autoNext:'f_secret4', delay:1700 },
+  f_secret4:{ from:'them', text:'tas Sinta ada pisau berdarah. tas Bima ada peta hutan dengan tanda X', autoNext:'f_secret5', delay:1700 },
+  f_secret5:{ from:'them', text:'dua orang membawa barang mencurigakan. mereka berdua pembunuhnya?', choices:[
+    {label:'Konfrontasi Sinta dulu', next:'f_sinta1'},
+    {label:'Konfrontasi Bima dulu', next:'f_bima1'},
+    {label:'Pantau keduanya dari jauh', next:'f_pantau1'}
+  ]},
+
+  f_sinta1:{ from:'me', text:'Sinta. buka tasmu. sekarang', autoNext:'f_sinta2', delay:900 },
+  f_sinta2:{ from:'them', text:'Sinta nangis. dia bilang pisau itu punya kakaknya yang ikut rombongan. kakaknya hilang hari pertama', autoNext:'f_sinta3', delay:1700 },
+  f_sinta3:{ from:'them', text:'tapi... kakaknya hilang. kenapa pisaunya masih ada? dan kenapa berdarah?', choices:[
+    {label:'Percaya Sinta', next:'f_percaya_sinta1'},
+    {label:'Tidak percaya, ikat Sinta', next:'f_ikat_sinta1'}
+  ]},
+  f_percaya_sinta1:{ from:'me', text:'oke. aku percaya kamu. tapi kamu harus bantu kami', autoNext:'f_percaya_sinta2', delay:900 },
+  f_percaya_sinta2:{ from:'them', text:'Sinta setuju. dia bilang kakaknya sempat bisik sesuatu sebelum hilang: "ada dua orang, jangan percaya"', autoNext:'f_percaya_sinta3', delay:1800 },
+  f_percaya_sinta3:{ from:'them', text:'malam itu, kalian bertiga jaga tenda. tengah malam, Sinta bangun dan keluar', autoNext:'f_percaya_sinta4', delay:1700 },
+  f_percaya_sinta4:{ from:'them', text:'kamu ikuti. Sinta bertemu seseorang di balik pohon. kamu dengar bisikan: "kapan kita bunuh yang lain?"', end:true, endText:'🌲 Kamu salah percaya. Sinta adalah salah satu pembunuh.' },
+  f_ikat_sinta1:{ from:'me', text:'ikat dia. kita bawa ke camp', autoNext:'f_ikat_sinta2', delay:900 },
+  f_ikat_sinta2:{ from:'them', text:'Sinta berteriak, mengaku tidak bersalah. tapi malam itu, saat semua tertidur...', autoNext:'f_ikat_sinta3', delay:1800 },
+  f_ikat_sinta3:{ from:'them', text:'...Sinta hilang. ikatannya lepas. dan ada tulisan di tanah: "kalian salah orang"', end:true, endText:'🔗 Sinta kabur. Ia mungkin korban, atau mungkin pembunuh yang lolos.' },
+
+  f_bima1:{ from:'me', text:'Bima. peta itu apa?', autoNext:'f_bima2', delay:900 },
+  f_bima2:{ from:'them', text:'Bima panik. dia bilang peta itu ditemukan di tenda Rian. dia cuma menyimpan untuk bukti', autoNext:'f_bima3', delay:1700 },
+  f_bima3:{ from:'them', text:'tapi ada yang aneh. tanda X di peta itu... mengarah ke tenda kamu', choices:[
+    {label:'Pergi ke tanda X sekarang', next:'f_x1'},
+    {label:'Jangan percaya Bima, serang dia', next:'f_serang1'}
+  ]},
+  f_x1:{ from:'me', text:'kita ke tanda X itu. malam ini', autoNext:'f_x2', delay:900 },
+  f_x2:{ from:'them', text:'(kalian berjalan ke arah X. ternyata itu adalah goa kecil di balik air terjun)', autoNext:'f_x3', delay:1800 },
+  f_x3:{ from:'them', text:'di dalam goa ada... tubuh Rian. tapi dia masih hangat. baru dibunuh', autoNext:'f_x4', delay:1800 },
+  f_x4:{ from:'them', text:'berarti yang kamu temukan di sungai tadi... bukan Rian. itu tubuh orang lain', end:true, endText:'🕳️ Kamu menemukan mayat baru. Yang di sungai bukan Rian. Ada lebih dari 2 pembunuh.' },
+  f_serang1:{ from:'me', text:'(kamu menyerang Bima dengan batu)', autoNext:'f_serang2', delay:1000 },
+  f_serang2:{ from:'them', text:'Bima jatuh. kepalanya berdarah. dia gak bergerak', autoNext:'f_serang3', delay:1600 },
+  f_serang3:{ from:'them', text:'kamu periksa nadinya... dia masih hidup. tapi kamu baru saja menyerang orang yang mungkin tidak bersalah', end:true, endText:'🪨 Kamu menyerang Bima. Kamu jadi pembunuh juga. Atau mungkin bukan.' },
+  f_pantau1:{ from:'me', text:'kita pantau mereka berdua dari jauh', autoNext:'f_pantau2', delay:900 },
+  f_pantau2:{ from:'them', text:'(sepanjang malam kamu mengamati. jam 3 pagi, Sinta keluar tenda)', autoNext:'f_pantau3', delay:1700 },
+  f_pantau3:{ from:'them', text:'Sinta berjalan ke arah hutan. beberapa menit kemudian, Bima juga keluar', autoNext:'f_pantau4', delay:1700 },
+  f_pantau4:{ from:'them', text:'mereka bertemu di tengah hutan. dan... berpelukan', end:true, endText:'👀 Kamu melihat mereka berpelukan. Mereka sepasang kekasih. Dan mungkin... mereka berdua pembunuhnya.' },
+
+  f_back1:{ from:'me', text:'balik. kita gak boleh pisah', autoNext:'f_back2', delay:900 },
+  f_back2:{ from:'them', text:'(kalian balik ke camp. tapi tenda Dita kosong)', autoNext:'f_back3', delay:1500 },
+  f_back3:{ from:'them', text:'cuma ada darah di kasur Dita. dan foto kalian bertiga dengan tanda silang di wajah Dita', end:true, endText:'⛺ Kamu kembali ke camp. Dita hilang. Pembunuh sudah bergerak lagi.' },
+
+  /* ===== CABANG B: KUMPULKAN SEMUA ===== */
+  f_gather1:{ from:'me', text:'semua kumpul di tengah camp. sekarang.', autoNext:'f_gather2', delay:900 },
+  f_gather2:{ from:'them', text:'(6 orang datang. 1 tidak. Sinta)', autoNext:'f_gather3', delay:1500 },
+  f_gather3:{ from:'them', text:'kalian cari Sinta. tendanya kosong. tapi ada jejak darah ke arah hutan', autoNext:'f_gather4', delay:1600 },
+  f_gather4:{ from:'them', text:'sambil jalan, aku lihat ada yang gak tenang. pegang tasnya terus', choices:[
+    {label:'Periksa tas orang itu', next:'f_bag1'},
+    {label:'Cari Sinta dulu', next:'f_cari_sinta1'}
+  ]},
+  f_bag1:{ from:'me', text:'buka tasmu. sekarang.', autoNext:'f_bag2', delay:900 },
+  f_bag2:{ from:'them', text:'(orang itu kabur. kamu kejar. dia jatuh. tasnya terbuka)', autoNext:'f_bag3', delay:1600 },
+  f_bag3:{ from:'them', text:'di dalamnya ada pisau berdarah, foto kalian semua dengan tanda silang, dan buku catatan', autoNext:'f_bag4', delay:1800 },
+  f_bag4:{ from:'them', text:'buku catatan itu berisi jadwal pembunuhan. dan... ada 2 nama yang ditandai belum dieksekusi', autoNext:'f_bag5', delay:1800 },
+  f_bag5:{ from:'them', text:'salah satunya namamu', choices:[
+    {label:'Tanya siapa pembunuh kedua', next:'f_tanya_k1'},
+    {label:'Bunuh dia duluan', next:'f_bunuh_k1'}
+  ]},
+  f_tanya_k1:{ from:'me', text:'siapa yang bantu kamu?', autoNext:'f_tanya_k2', delay:900 },
+  f_tanya_k2:{ from:'them', text:'dia ketawa. dia bilang "orang yang paling kamu percaya"', autoNext:'f_tanya_k3', delay:1700 },
+  f_tanya_k3:{ from:'them', text:'lalu dia menggigit lidahnya sendiri. mati sebelum kamu bisa tanya lagi', end:true, endText:'🔪 Pembunuh pertama mati. Tapi identitas pembunuh kedua masih misteri. "Orang yang paling kamu percaya."' },
+  f_bunuh_k1:{ from:'me', text:'(kamu ambil pisau itu. kamu tusuk dia)', autoNext:'f_bunuh_k2', delay:1200 },
+  f_bunuh_k2:{ from:'them', text:'darah di tanganmu. kamu baru saja membunuh seseorang', autoNext:'f_bunuh_k3', delay:1700 },
+  f_bunuh_k3:{ from:'them', text:'tapi saat kamu balik ke camp... semua orang lihat tanganmu berdarah', end:true, endText:'🩸 Kamu membunuh pembunuh. Tapi sekarang semua orang mengira KAMU pembunuhnya.' },
+  f_cari_sinta1:{ from:'me', text:'cari Sinta dulu. itu lebih penting', autoNext:'f_cari_sinta2', delay:900 },
+  f_cari_sinta2:{ from:'them', text:'(kalian pecah jadi 2 kelompok. kamu dan 2 orang, kelompok lain 3 orang)', autoNext:'f_cari_sinta3', delay:1700 },
+  f_cari_sinta3:{ from:'them', text:'kamu temukan Sinta... tergantung di pohon. sudah meninggal', autoNext:'f_cari_sinta4', delay:1800 },
+  f_cari_sinta4:{ from:'them', text:'di lehernya ada tulisan: "salah orang. kalian bunuh dia"', autoNext:'f_cari_sinta5', delay:1700 },
+  f_cari_sinta5:{ from:'them', text:'tiba-tiba kelompok lain gak balik. mereka hilang semua', end:true, endText:'💀 Sinta tewas. Tapi dia bukan pembunuh. Kalian salah tuduh. Dan kelompok lain hilang.' },
+
+  /* ===== CABANG C: DIAM & AMATI ===== */
+  f_watch1:{ from:'me', text:'(kamu memilih diam dan mengamati)', autoNext:'f_watch2', delay:1200 },
+  f_watch2:{ from:'them', text:'kamu gak jawab. kamu juga curiga ya?', autoNext:'f_watch3', delay:1400 },
+  f_watch3:{ from:'them', text:'aku lihat seseorang pergi ke hutan tadi malam. jam 3. bawa sesuatu besar', autoNext:'f_watch4', delay:1600 },
+  f_watch4:{ from:'them', text:'besok malam kita ikuti dia. bareng', choices:[
+    {label:'Setuju. ikuti besok malam', next:'f_ikuti1'},
+    {label:'Jangan. terlalu berbahaya', next:'f_tidak_ikuti1'}
+  ]},
+  f_ikuti1:{ from:'me', text:'oke. besok malam kita ikuti', autoNext:'f_ikuti2', delay:900 },
+  f_ikuti2:{ from:'them', text:'(besok malam. jam 3. orang itu keluar tenda. kalian ikuti)', autoNext:'f_ikuti3', delay:1800 },
+  f_ikuti3:{ from:'them', text:'dia berhenti di tengah hutan. dia gali tanah. dia kubur sesuatu', autoNext:'f_ikuti4', delay:1800 },
+  f_ikuti4:{ from:'them', text:'setelah dia pergi, kalian periksa. itu... mayat teman kita yang hilang hari pertama', autoNext:'f_ikuti5', delay:1800 },
+  f_ikuti5:{ from:'them', text:'berarti dia pembunuhnya. tapi siapa? wajahnya tertutup jaket', choices:[
+    {label:'Konfrontasi besok pagi', next:'f_konfrontasi1'},
+    {label:'Bunuh dia malam ini juga', next:'f_bunuh_malam1'}
+  ]},
+  f_konfrontasi1:{ from:'me', text:'besok pagi. di depan semua orang', autoNext:'f_konfrontasi2', delay:900 },
+  f_konfrontasi2:{ from:'them', text:'(pagi. kamu kumpulkan semua. kamu tunjuk orang itu)', autoNext:'f_konfrontasi3', delay:1700 },
+  f_konfrontasi3:{ from:'them', text:'dia buka jaketnya. ternyata... orang yang kamu tunjuk bukan yang tadi malam', autoNext:'f_konfrontasi4', delay:1800 },
+  f_konfrontasi4:{ from:'them', text:'orang yang tadi malam... adalah temanmu yang satu ini. dia tersenyum. dia bilang "kalian semua bodoh"', autoNext:'f_konfrontasi5', delay:1900 },
+  f_konfrontasi5:{ from:'them', text:'dia lari ke hutan. kalian kejar. tapi dia lebih tahu hutan ini', end:true, endText:'🏃 Pembunuh kabur ke hutan. Kalian tidak bisa menangkapnya. Dan dia masih di sekitar kalian.' },
+  f_bunuh_malam1:{ from:'me', text:'(kamu dan temanmu mendekati orang itu dari belakang)', autoNext:'f_bunuh_malam2', delay:1200 },
+  f_bunuh_malam2:{ from:'them', text:'kamu angkat batu. kamu siap menghantam...', autoNext:'f_bunuh_malam3', delay:1600 },
+  f_bunuh_malam3:{ from:'them', text:'...tapi orang itu berbalik. itu temanmu sendiri. teman yang kamu ajak ngobrol tadi', end:true, endText:'🪨 Kamu hampir membunuh orang yang salah. Pembunuh masih berkeliaran.' },
+  f_tidak_ikuti1:{ from:'me', text:'jangan. terlalu berbahaya', autoNext:'f_tidak_ikuti2', delay:900 },
+  f_tidak_ikuti2:{ from:'them', text:'oke. tapi besok pagi... temanmu yang kemarin ngajak ngobrol itu hilang', autoNext:'f_tidak_ikuti3', delay:1800 },
+  f_tidak_ikuti3:{ from:'them', text:'dan di tendanya ada tulisan: "kamu gak mau ikut. sekarang kamu sendirian"', end:true, endText:'🌲 Kamu memilih diam. Sekarang kamu sendirian di hutan ini. Dengan 2 pembunuh.' }
+},
+
+/* =========================================================
+   ALUR 2: ZOMBIE OUTBREAK (5 SURVIVOR)
+   Panjang: ~45 node, 12 ending
+   ========================================================= */
+zombie: {
+  start:{ from:'them', text:'kamu masih hidup? syukurlah', autoNext:'z2', delay:900 },
+  z2:{ from:'them', text:'kota udah hancur. semua orang jadi zombie. cuma kita berlima yang tersisa', autoNext:'z3', delay:1400 },
+  z3:{ from:'them', text:'kita di atap gedung. ada 4 teman lain. persediaan makanan cuma cukup 3 hari', autoNext:'z4', delay:1400 },
+  z4:{ from:'them', text:'tapi ada masalah. salah satu teman kita, Ari, kemarin digigit zombie', autoNext:'z5', delay:1500 },
+  z5:{ from:'them', text:'dia belum berubah. tapi kita gak tau kapan dia berubah', choices:[
+    {label:'Keluarkan Ari sekarang', next:'z_kick1', danger:true},
+    {label:'Pantau Ari dulu', next:'z_pantau1'},
+    {label:'Cari obat untuk Ari', next:'z_obat1'}
+  ]},
+
+  /* ===== CABANG A: KELUARKAN ARI ===== */
+  z_kick1:{ from:'me', text:'kita gak bisa ambil risiko. keluarkan dia', autoNext:'z_kick2', delay:900 },
+  z_kick2:{ from:'them', text:'(kalian keluarkan Ari ke lantai bawah. dia nangis, minta tolong)', autoNext:'z_kick3', delay:1700 },
+  z_kick3:{ from:'them', text:'malam itu, kalian dengar suara Ari dari bawah. minta dibukakan pintu', autoNext:'z_kick4', delay:1700 },
+  z_kick4:{ from:'them', text:'suaranya... berubah. lebih serak. dan dia bilang "aku lapar"', choices:[
+    {label:'Buka pintu, selamatkan dia', next:'z_buka_ari1'},
+    {label:'Abaikan, biarkan dia', next:'z_abai_ari1'}
+  ]},
+  z_buka_ari1:{ from:'me', text:'(kamu buka pintu)', autoNext:'z_buka_ari2', delay:1000 },
+  z_buka_ari2:{ from:'them', text:'Ari menerkam kamu. matanya putih. giginya tajam. dia udah jadi zombie', end:true, endText:'🧟 Kamu membuka pintu. Ari sudah berubah. Kamu digigit. Kamu akan jadi zombie.' },
+  z_abai_ari1:{ from:'me', text:'(kamu tutup telinga. kamu biarkan dia)', autoNext:'z_abai_ari2', delay:1200 },
+  z_abai_ari2:{ from:'them', text:'(pagi. Ari sudah diam. kamu buka pintu. dia sudah mati. atau... zombie yang diam)', autoNext:'z_abai_ari3', delay:1800 },
+  z_abai_ari3:{ from:'them', text:'kamu lihat luka di tanganmu. kemarin kamu tergores saat keluarkan Ari', end:true, endText:'🩸 Kamu selamat dari Ari. Tapi kamu tergores. Kamu mungkin sudah terinfeksi.' },
+
+  /* ===== CABANG B: PANTAU ARI ===== */
+  z_pantau1:{ from:'me', text:'kita pantau dulu. 24 jam. kalau berubah, kita bertindak', autoNext:'z_pantau2', delay:900 },
+  z_pantau2:{ from:'them', text:'(24 jam berlalu. Ari gak berubah. dia baik-baik aja)', autoNext:'z_pantau3', delay:1700 },
+  z_pantau3:{ from:'them', text:'tapi... ada yang aneh. Ari gak berkeringat. gak bernapas berat. dan lukanya... hilang', autoNext:'z_pantau4', delay:1700 },
+  z_pantau4:{ from:'them', text:'aku takut. mungkin dia bukan berubah jadi zombie. mungkin dia... sesuatu yang lain', choices:[
+    {label:'Tanya Ari langsung', next:'z_tanya_ari1'},
+    {label:'Isolasi Ari diam-diam', next:'z_isolasi1'}
+  ]},
+  z_tanya_ari1:{ from:'me', text:'Ari. kamu gak berubah. kenapa?', autoNext:'z_tanya_ari2', delay:900 },
+  z_tanya_ari2:{ from:'them', text:'Ari diam. lalu dia bilang: "karena aku bukan Ari. Ari sudah mati 3 hari lalu"', autoNext:'z_tanya_ari3', delay:1900 },
+  z_tanya_ari3:{ from:'them', text:'dia tersenyum. giginya tajam. dia bukan zombie. dia... iblis', end:true, endText:'😈 Ari sudah mati. Yang ada di sini bukan Ari. Dan ia lapar.' },
+  z_isolasi1:{ from:'me', text:'(kamu kunci Ari di kamar terpisah)', autoNext:'z_isolasi2', delay:1000 },
+  z_isolasi2:{ from:'them', text:'(malam. kamu dengar Ari ngobrol sendiri. dengan suara banyak orang)', autoNext:'z_isolasi3', delay:1800 },
+  z_isolasi3:{ from:'them', text:'pagi. kamu buka pintu. Ari gak ada. cuma ada tulisan: "terima kasih sudah mengurung aku"', end:true, endText:'🔒 Ari hilang dari kurungan. Tulisan itu... seolah ia memang ingin dikurung.' },
+
+  /* ===== CABANG C: CARI OBAT ===== */
+  z_obat1:{ from:'me', text:'kita cari obat. ada rumah sakit 5 km dari sini', autoNext:'z_obat2', delay:900 },
+  z_obat2:{ from:'them', text:'(kalian berlima turun. jalan ke rumah sakit. banyak zombie di jalan)', autoNext:'z_obat3', delay:1700 },
+  z_obat3:{ from:'them', text:'kalian sampai. rumah sakit kosong. tapi ada suara dari ruang obat', autoNext:'z_obat4', delay:1700 },
+  z_obat4:{ from:'them', text:'di dalam ada survivor lain. dia punya obat. tapi dia minta imbalan', choices:[
+    {label:'Tanya imbalannya', next:'z_tanya_imbalan1'},
+    {label:'Rampas obatnya', next:'z_rampas1', danger:true}
+  ]},
+  z_tanya_imbalan1:{ from:'me', text:'apa imbalannya?', autoNext:'z_tanya_imbalan2', delay:900 },
+  z_tanya_imbalan2:{ from:'them', text:'dia bilang: "tinggalkan satu orang di sini. untuk makananku"', autoNext:'z_tanya_imbalan3', delay:1800 },
+  z_tanya_imbalan3:{ from:'them', text:'kalian semua terdiam. dia bukan survivor. dia kanibal', choices:[
+    {label:'Tolak, cari obat lain', next:'z_tolak1'},
+    {label:'Terima, korbankan satu orang', next:'z_korban1', danger:true}
+  ]},
+  z_tolak1:{ from:'me', text:'gak. kita cari obat lain', autoNext:'z_tolak2', delay:900 },
+  z_tolak2:{ from:'them', text:'(kalian keluar. tapi dia kejar. dia gigit bahu Ari)', autoNext:'z_tolak3', delay:1700 },
+  z_tolak3:{ from:'them', text:'Ari teriak. kalian lari. Ari... Ari tertinggal', end:true, endText:'🏥 Kamu menolak. Ari digigit. Ari tertinggal. Kamu kehilangan satu teman.' },
+  z_korban1:{ from:'me', text:'(kalian pilih salah satu. yang paling lemah)', autoNext:'z_korban2', delay:1200 },
+  z_korban2:{ from:'them', text:'kanibal itu kasih obat. kalian balik ke atap. Ari sembuh', autoNext:'z_korban3', delay:1700 },
+  z_korban3:{ from:'them', text:'tapi... yang dikorbankan itu adik kamu. atau sahabat kamu. kamu gak akan pernah lupa', end:true, endText:'💔 Kamu menyelamatkan Ari. Tapi kamu mengorbankan seseorang yang kamu cintai.' },
+  z_rampas1:{ from:'me', text:'(kamu serang kanibal itu. kamu rampas obatnya)', autoNext:'z_rampas2', delay:1100 },
+  z_rampas2:{ from:'them', text:'kamu dapat obat. tapi kanibal itu belum mati. dia lari', autoNext:'z_rampas3', delay:1700 },
+  z_rampas3:{ from:'them', text:'kalian balik ke atap. Ari sembuh. tapi... kanibal itu tau di mana kalian', end:true, endText:'💊 Kamu merampas obat. Ari sembuh. Tapi kanibal itu mengikuti kalian.' }
+},
+
+/* =========================================================
+   ALUR 3: CERMIN RETAK
+   Panjang: ~35 node, 8 ending
+   ========================================================= */
+mirror: {
+  start:{ from:'them', text:'kamu lihat cermin di kamar mandi?', autoNext:'m2', delay:900 },
+  m2:{ from:'them', text:'pantulan kamu... telat bergerak. kayak ada jeda 2 detik', autoNext:'m3', delay:1400 },
+  m3:{ from:'them', text:'aku takut. tadi malam cerminnya retak sendiri. dari dalam', autoNext:'m4', delay:1500 },
+  m4:{ from:'them', text:'kamu mau lihat? atau kita pecahkan aja?', choices:[
+    {label:'Lihat dulu', next:'m_lihat1'},
+    {label:'Pecahkan sekarang', next:'m_pecah1'},
+    {label:'Tutup pakai kain', next:'m_tutup1'}
+  ]},
+  m_lihat1:{ from:'me', text:'(kamu lihat cermin. pantulanmu... tersenyum. padahal kamu gak senyum)', autoNext:'m_lihat2', delay:1200 },
+  m_lihat2:{ from:'them', text:'pantulanmu angkat tangan. kamu gak angkat. dia... keluar', end:true, endText:'🪞 Pantulanmu keluar dari cermin. Dan kamu... masuk ke dalamnya.' },
+  m_pecah1:{ from:'me', text:'(kamu pukul cermin dengan kursi)', autoNext:'m_pecah2', delay:1000 },
+  m_pecah2:{ from:'them', text:'(pecahan berhamburan. di setiap pecahan ada wajahmu. semua ekspresinya beda)', autoNext:'m_pecah3', delay:1600 },
+  m_pecah3:{ from:'them', text:'satu pecahan... ada tangan keluar dari situ', choices:[
+    {label:'Sentuh tangan itu', next:'m_sentuh1'},
+    {label:'Lari dari kamar mandi', next:'m_lari1'}
+  ]},
+  m_sentuh1:{ from:'me', text:'(kamu sentuh tangan itu)', autoNext:'m_sentuh2', delay:1100 },
+  m_sentuh2:{ from:'them', text:'tangan itu menggenggam kamu. keras. kamu ditarik ke dalam cermin', end:true, endText:'🪞 Kamu ditarik ke dalam cermin. Sekarang kamu adalah pantulan.' },
+  m_lari1:{ from:'me', text:'(kamu lari. tapi pintu kamar mandi gak bisa dibuka)', autoNext:'m_lari2', delay:1200 },
+  m_lari2:{ from:'them', text:'pantulanmu di cermin yang pecah... mulai bergerak. semua pecahan. mereka berdiri', end:true, endText:'🪞 Kamu terjebak. Pantulanmu yang banyak itu... mulai bergerak.' },
+  m_tutup1:{ from:'me', text:'(kamu tutup cermin dengan kain)', autoNext:'m_tutup2', delay:1000 },
+  m_tutup2:{ from:'them', text:'kainnya bergerak. ada yang mendorong dari dalam', autoNext:'m_tutup3', delay:1500 },
+  m_tutup3:{ from:'them', text:'kainnya jatuh. cerminnya kosong. pantulanmu hilang', choices:[
+    {label:'Cari pantulanmu', next:'m_cari1'},
+    {label:'Keluar dari kamar mandi', next:'m_keluar1'}
+  ]},
+  m_cari1:{ from:'me', text:'(kamu balik ke cermin. kamu lihat. gak ada pantulan)', autoNext:'m_cari2', delay:1300 },
+  m_cari2:{ from:'them', text:'kamu gosok cermin. masih kosong. kamu... kamu gak punya bayangan', end:true, endText:'🪞 Kamu kehilangan pantulanmu. Kamu bukan manusia lagi.' },
+  m_keluar1:{ from:'me', text:'(kamu keluar. kamu lihat cermin lain di ruang tamu)', autoNext:'m_keluar2', delay:1300 },
+  m_keluar2:{ from:'them', text:'di cermin itu... ada pantulanmu. tapi dia tersenyum. dan melambaikan tangan', end:true, endText:'🪞 Pantulanmu ada di cermin lain. Ia melambaikan tangan. Seolah mengucapkan selamat tinggal.' }
+},
+
+/* =========================================================
+   ALUR 4: SEKOLAH TERBENGKALAI
+   Panjang: ~35 node, 8 ending
+   ========================================================= */
+school: {
+  start:{ from:'them', text:'kita masuk ke sekolah ini cuma buat konten. sekarang pintunya gak bisa dibuka', autoNext:'s2', delay:1000 },
+  s2:{ from:'them', text:'sinyal hilang. lampu mati. dan... ada suara bel sekolah padahal udah jam 11 malam', autoNext:'s3', delay:1400 },
+  s3:{ from:'them', text:'kamu dengar gak? belnya dari arah ruang kepala sekolah', choices:[
+    {label:'Ikuti suara bel', next:'s_bel1'},
+    {label:'Cari pintu darurat', next:'s_darurat1'},
+    {label:'Sembunyi di kelas', next:'s_sembunyi1'}
+  ]},
+  s_bel1:{ from:'me', text:'(kamu ikuti suara bel. pintu ruang kepala sekolah terbuka)', autoNext:'s_bel2', delay:1200 },
+  s_bel2:{ from:'them', text:'di dalam ada 7 kursi kosong. di meja ada foto kita semua. dengan tanggal hari ini', autoNext:'s_bel3', delay:1600 },
+  s_bel3:{ from:'them', text:'di belakang foto ada tulisan: "kalian semua akan tinggal di sini selamanya"', choices:[
+    {label:'Cari jalan keluar', next:'s_cari_keluar1'},
+    {label:'Hancurkan foto itu', next:'s_hancur1'}
+  ]},
+  s_cari_keluar1:{ from:'me', text:'(kamu cari jalan keluar. ada pintu di balik lemari)', autoNext:'s_cari_keluar2', delay:1300 },
+  s_cari_keluar2:{ from:'them', text:'pintu itu terbuka. di baliknya... lorong panjang. gak ada ujung', end:true, endText:'🚪 Kamu menemukan pintu. Tapi di baliknya lorong tanpa ujung.' },
+  s_hancur1:{ from:'me', text:'(kamu robek foto itu)', autoNext:'s_hancur2', delay:1000 },
+  s_hancur2:{ from:'them', text:'foto itu berdarah. darah keluar dari robekan. dan lampu mati total', end:true, endText:'🩸 Kamu merobek foto. Darah keluar. Lampu mati. Dan sesuatu menyentuh kaki kamu.' },
+  s_darurat1:{ from:'me', text:'(kamu cari pintu darurat. ada di ujung lorong)', autoNext:'s_darurat2', delay:1200 },
+  s_darurat2:{ from:'them', text:'pintu darurat terkunci dari luar. ada tulisan "JANGAN KELUAR"', autoNext:'s_darurat3', delay:1500 },
+  s_darurat3:{ from:'them', text:'tapi... di luar ada yang ngetok. dia bilang "aku teman kalian"', choices:[
+    {label:'Buka pintu', next:'s_buka1'},
+    {label:'Jangan buka', next:'s_jangan_buka1'}
+  ]},
+  s_buka1:{ from:'me', text:'(kamu buka pintu)', autoNext:'s_buka2', delay:1000 },
+  s_buka2:{ from:'them', text:'di luar ada teman kalian yang tadi hilang. dia tersenyum. "akhirnya"', autoNext:'s_buka3', delay:1500 },
+  s_buka3:{ from:'them', text:'tapi... di belakangnya ada 10 orang lain. semuanya memegang kapak', end:true, endText:'🚪 Kamu membuka pintu. Temanmu membawa 10 orang. Semuanya memegang kapak.' },
+  s_jangan_buka1:{ from:'me', text:'(kamu gak buka. kamu balik ke kelas)', autoNext:'s_jangan_buka2', delay:1200 },
+  s_jangan_buka2:{ from:'them', text:'(pagi. ketukan berhenti. kamu lihat dari jendela. gak ada siapa-siapa)', autoNext:'s_jangan_buka3', delay:1600 },
+  s_jangan_buka3:{ from:'them', text:'tapi di lantai ada tulisan: "kamu gak mau keluar. berarti kamu milik kami"', end:true, endText:'🏫 Kamu tidak membuka pintu. Tulisan itu... tanda bahwa mereka mengklaim kalian.' },
+  s_sembunyi1:{ from:'me', text:'(kamu sembunyi di kelas. di bawah meja)', autoNext:'s_sembunyi2', delay:1200 },
+  s_sembunyi2:{ from:'them', text:'...ada langkah kaki di lorong. berhenti di depan kelas', autoNext:'s_sembunyi3', delay:1500 },
+  s_sembunyi3:{ from:'them', text:'pintu terbuka. tapi gak ada siapa-siapa. cuma... bau darah', choices:[
+    {label:'Keluar dari persembunyian', next:'s_keluar_sembunyi1'},
+    {label:'Tetap sembunyi', next:'s_tetap1'}
+  ]},
+  s_keluar_sembunyi1:{ from:'me', text:'(kamu keluar. kamu lihat ke lorong)', autoNext:'s_keluar_sembunyi2', delay:1200 },
+  s_keluar_sembunyi2:{ from:'them', text:'di lorong ada tulisan darah: "kamu sembunyi. kami tunggu"', end:true, endText:'🏫 Kamu keluar. Tulisan itu. Mereka menunggumu.' },
+  s_tetap1:{ from:'me', text:'(kamu tetap sembunyi. berjam-jam)', autoNext:'s_tetap2', delay:1600 },
+  s_tetap2:{ from:'them', text:'(pagi. kamu keluar. sekolah sepi. teman-temanmu... hilang semua)', end:true, endText:'🏫 Kamu bertahan. Tapi teman-temanmu hilang. Kamu sendirian di sekolah ini.' }
+},
+
+/* =========================================================
+   ALUR 5: RUMAH TUA
+   Panjang: ~35 node, 8 ending
+   ========================================================= */
+house: {
+  start:{ from:'them', text:'kamu udah di rumah warisan nenek?', autoNext:'h2', delay:900 },
+  h2:{ from:'them', text:'aku dengar suara dari loteng. tiap tengah malam. kayak ada yang nyeret kursi', autoNext:'h3', delay:1400 },
+  h3:{ from:'them', text:'nenek kamu meninggal di loteng kan?', autoNext:'h4', delay:1400 },
+  h4:{ from:'them', text:'kamu mau naik ke loteng? atau gimana?', choices:[
+    {label:'Naik ke loteng sekarang', next:'h_naik1'},
+    {label:'Panggil teman dulu', next:'h_teman1'},
+    {label:'Rekam suaranya', next:'h_rekam1'}
+  ]},
+  h_naik1:{ from:'me', text:'(kamu naik tangga ke loteng)', autoNext:'h_naik2', delay:1200 },
+  h_naik2:{ from:'them', text:'...ada kursi goyang bergerak sendiri. dan foto nenek menghadap ke kamu', autoNext:'h_naik3', delay:1600 },
+  h_naik3:{ from:'them', text:'di bawah foto ada tulisan: "jangan jual rumah ini"', choices:[
+    {label:'Cari tahu kenapa', next:'h_cari1'},
+    {label:'Turun dan jual rumah', next:'h_jual1'}
+  ]},
+  h_cari1:{ from:'me', text:'(kamu cari petunjuk. ada buku harian nenek)', autoNext:'h_cari2', delay:1300 },
+  h_cari2:{ from:'them', text:'buku itu bilang: "rumah ini menjaga sesuatu. jangan biarkan keluar"', autoNext:'h_cari3', delay:1600 },
+  h_cari3:{ from:'them', text:'di halaman terakhir ada tulisan: "kalau kamu baca ini, berarti aku gagal"', end:true, endText:'📖 Kamu membaca buku nenek. "Kalau kamu baca ini, berarti aku gagal." Sesuatu sudah keluar.' },
+  h_jual1:{ from:'me', text:'(kamu turun. kamu hubungi agen properti)', autoNext:'h_jual2', delay:1200 },
+  h_jual2:{ from:'them', text:'(malam. agen datang. dia lihat rumah. dia bilang "rumah ini... gak bisa dijual"', autoNext:'h_jual3', delay:1600 },
+  h_jual3:{ from:'them', text:'agen itu pergi. tapi kamu lihat... dia gak punya bayangan', end:true, endText:'🏚️ Agen properti itu... bukan manusia. Rumah ini tidak mau dijual.' },
+  h_teman1:{ from:'me', text:'(kamu telepon teman. dia datang)', autoNext:'h_teman2', delay:1200 },
+  h_teman2:{ from:'them', text:'(kalian naik loteng bareng. kursi goyang berhenti bergerak)', autoNext:'h_teman3', delay:1500 },
+  h_teman3:{ from:'them', text:'temanmu bilang "ini cuma angin". tapi... foto nenek sekarang menghadap temanmu', end:true, endText:'👥 Kamu mengajak teman. Tapi foto nenek... sekarang menghadap dia.' },
+  h_rekam1:{ from:'me', text:'(kamu rekam suara dari loteng)', autoNext:'h_rekam2', delay:1200 },
+  h_rekam2:{ from:'them', text:'di rekaman ada suara kamu sendiri. bilang "keluar dari rumah ini"', autoNext:'h_rekam3', delay:1500 },
+  h_rekam3:{ from:'them', text:'tapi kamu gak pernah ngomong gitu. atau... iya?', choices:[
+    {label:'Dengarkan rekaman lagi', next:'h_dengar1'},
+    {label:'Hapus rekaman', next:'h_hapus1'}
+  ]},
+  h_dengar1:{ from:'me', text:'(kamu dengar ulang. ada suara lain. suara nenek)', autoNext:'h_dengar2', delay:1300 },
+  h_dengar2:{ from:'them', text:'nenek bilang: "jangan tidur di kamar itu. dia datang jam 3"', end:true, endText:'🎙️ Rekaman itu. Suara nenek. Ia memperingatkanmu. Tapi tentang siapa?' },
+  h_hapus1:{ from:'me', text:'(kamu hapus rekaman. kamu tidur)', autoNext:'h_hapus2', delay:1200 },
+  h_hapus2:{ from:'them', text:'(jam 3 pagi. kamu bangun. ada yang duduk di ujung kasur. membelakangi kamu)', end:true, endText:'🛏️ Kamu menghapus rekaman. Tapi jam 3 pagi, ada yang duduk di kasurmu.' }
+},
+
+/* =========================================================
+   ALUR 6: HANTU ANAK KECIL
+   Panjang: ~35 node, 8 ending
+   ========================================================= */
+ghost: {
+  start:{ from:'them', text:'kamu lihat anak kecil di tikungan jalan?', autoNext:'g2', delay:900 },
+  g2:{ from:'them', text:'dia nangis. sendirian. jam 2 pagi. di jalan sepi', autoNext:'g3', delay:1400 },
+  g3:{ from:'them', text:'di tangannya ada foto. foto... kamu', autoNext:'g4', delay:1400 },
+  g4:{ from:'them', text:'kamu mau hampiri? atau gimana?', choices:[
+    {label:'Hampiri anak itu', next:'g_hampir1'},
+    {label:'Abaikan dan jalan terus', next:'g_abai1'},
+    {label:'Hubungi polisi', next:'g_polisi1'}
+  ]},
+  g_hampir1:{ from:'me', text:'(kamu hampiri anak itu)', autoNext:'g_hampir2', delay:1000 },
+  g_hampir2:{ from:'them', text:'dia berhenti nangis. dia lihat kamu. dia bilang "akhirnya kamu datang"', autoNext:'g_hampir3', delay:1500 },
+  g_hampir3:{ from:'them', text:'fotonya... foto kamu 10 tahun lalu. saat kamu masih kecil', autoNext:'g_hampir4', delay:1600 },
+  g_hampir4:{ from:'them', text:'dia bilang "kamu janji mau main sama aku. tapi kamu gak pernah datang"', choices:[
+    {label:'Minta maaf', next:'g_maaf1'},
+    {label:'Tanya siapa dia', next:'g_tanya1'}
+  ]},
+  g_maaf1:{ from:'me', text:'maafkan aku. aku lupa', autoNext:'g_maaf2', delay:1000 },
+  g_maaf2:{ from:'them', text:'dia tersenyum. dia bilang "gak apa-apa. sekarang kamu udah datang"', autoNext:'g_maaf3', delay:1500 },
+  g_maaf3:{ from:'them', text:'dia pegang tangan kamu. tangan itu... dingin. sangat dingin', end:true, endText:'👻 Anak itu memegang tanganmu. Dinginnya... bukan dingin manusia.' },
+  g_tanya1:{ from:'me', text:'kamu siapa?', autoNext:'g_tanya2', delay:900 },
+  g_tanya2:{ from:'them', text:'dia bilang "aku kamu. kamu yang hilang 3 hari waktu kecil"', autoNext:'g_tanya3', delay:1700 },
+  g_tanya3:{ from:'them', text:'dia bilang "aku gak pernah keluar dari hutan itu. kamu keluar. aku tinggal"', end:true, endText:'👻 Anak itu adalah kamu. Kamu yang hilang 3 hari di hutan. Kamu yang tidak pernah keluar.' },
+  g_abai1:{ from:'me', text:'(kamu jalan terus tanpa menoleh)', autoNext:'g_abai2', delay:1200 },
+  g_abai2:{ from:'them', text:'...anak itu sekarang ada di samping kamu. dia pegang tangan kamu', autoNext:'g_abai3', delay:1500 },
+  g_abai3:{ from:'them', text:'dia bilang "jangan tinggalin aku lagi"', choices:[
+    {label:'Lepaskan tangannya', next:'g_lepas1'},
+    {label:'Terima dia', next:'g_terima1'}
+  ]},
+  g_lepas1:{ from:'me', text:'(kamu lepaskan. kamu lari)', autoNext:'g_lepas2', delay:1100 },
+  g_lepas2:{ from:'them', text:'(kamu lari. tapi anak itu... selalu ada di depan kamu. di setiap tikungan)', end:true, endText:'🏃 Kamu lari. Tapi anak itu selalu ada di depan. Kamu tidak bisa lari dari dirimu sendiri.' },
+  g_terima1:{ from:'me', text:'(kamu terima. kamu peluk dia)', autoNext:'g_terima2', delay:1200 },
+  g_terima2:{ from:'them', text:'dia bilang "makasih. sekarang aku bisa pergi"', autoNext:'g_terima3', delay:1500 },
+  g_terima3:{ from:'them', text:'dia menghilang. kamu lihat tanganmu... kamu sekarang punya bayangan. dua bayangan', end:true, endText:'👻 Anak itu pergi. Tapi kamu sekarang punya dua bayangan. Satu milikmu. Satu miliknya.' },
+  g_polisi1:{ from:'me', text:'(kamu telepon polisi)', autoNext:'g_polisi2', delay:1000 },
+  g_polisi2:{ from:'them', text:'polisi datang. tapi mereka gak lihat anak itu. cuma ada kamu sendirian', autoNext:'g_polisi3', delay:1600 },
+  g_polisi3:{ from:'them', text:'polisi tanya "kenapa kamu pegang foto kamu sendiri sambil nangis?"', end:true, endText:'🚓 Polisi hanya melihatmu sendirian. Anak itu... hanya kamu yang bisa lihat.' }
+},
+
+/* =========================================================
+   ALUR 7: RUANG HAMPA
+   Panjang: ~35 node, 8 ending
+   ========================================================= */
+void: {
+  start:{ from:'them', text:'kamu bangun juga ya?', autoNext:'v2', delay:900 },
+  v2:{ from:'them', text:'kita di ruangan putih. gak ada pintu. gak ada jendela. cuma ada kita ber-7', autoNext:'v3', delay:1400 },
+  v3:{ from:'them', text:'tapi aku udah hitung. harusnya 6 orang. ada 1 lagi yang gak dikenal', autoNext:'v4', delay:1500 },
+  v4:{ from:'them', text:'kamu mau cari siapa yang gak dikenal?', choices:[
+    {label:'Cari siapa yang tidak dikenal', next:'v_cari1'},
+    {label:'Tanya semua orang namanya', next:'v_tanya1'},
+    {label:'Diam dan amati', next:'v_amati1'}
+  ]},
+  v_cari1:{ from:'me', text:'semua berdiri di lingkaran. sekarang', autoNext:'v_cari2', delay:1000 },
+  v_cari2:{ from:'them', text:'(semua berdiri. kamu hitung. ada 7 orang. tapi 1 orang di antaranya gak punya bayangan)', autoNext:'v_cari3', delay:1700 },
+  v_cari3:{ from:'them', text:'dia tersenyum. dan ruangan mulai mengecil', end:true, endText:'🌀 Kamu menemukan yang bukan manusia. Ruangan mulai menghimpit.' },
+  v_tanya1:{ from:'me', text:'semua sebut nama masing-masing', autoNext:'v_tanya2', delay:1000 },
+  v_tanya2:{ from:'them', text:'(semua nyebut nama. tapi 2 orang nyebut nama yang sama)', autoNext:'v_tanya3', delay:1600 },
+  v_tanya3:{ from:'them', text:'salah satunya bilang "aku yang asli". yang lain bilang "aku yang asli". mereka berdua sama persis', choices:[
+    {label:'Pisahkan mereka', next:'v_pisah1'},
+    {label:'Tanya pertanyaan rahasia', next:'v_rahasia1'}
+  ]},
+  v_pisah1:{ from:'me', text:'(kamu pisahkan mereka. kamu tanya satu-satu)', autoNext:'v_pisah2', delay:1200 },
+  v_pisah2:{ from:'them', text:'keduanya jawab sama. sampai pertanyaan ke-10. salah satunya... gak bisa jawab', autoNext:'v_pisah3', delay:1700 },
+  v_pisah3:{ from:'them', text:'dia tersenyum. dia bilang "kamu pintar". lalu dia lenyap', end:true, endText:'🌀 Kamu menemukan yang palsu. Tapi ruangan ini... masih menyimpan rahasia.' },
+  v_rahasia1:{ from:'me', text:'(kamu tanya: "apa warna langit di dunia nyata?")', autoNext:'v_rahasia2', delay:1300 },
+  v_rahasia2:{ from:'them', text:'satu jawab "biru". satu jawab "gak ada langit di sini"', autoNext:'v_rahasia3', delay:1600 },
+  v_rahasia3:{ from:'them', text:'yang jawab "gak ada langit"... dia bukan manusia. dia lenyap', end:true, endText:'🌀 Kamu menemukan yang palsu dengan pertanyaan cerdas. Ruangan mulai terbuka.' },
+  v_amati1:{ from:'me', text:'(kamu diam dan mengamati)', autoNext:'v_amati2', delay:1500 },
+  v_amati2:{ from:'them', text:'...aku lihat sesuatu. orang yang gak bergerak sama sekali. kayak patung', autoNext:'v_amati3', delay:1600 },
+  v_amati3:{ from:'them', text:'tapi matanya... matanya ngikutin kamu ke mana pun kamu gerak', choices:[
+    {label:'Hampiri patung itu', next:'v_hampiri1'},
+    {label:'Tetap diam', next:'v_tetap1'}
+  ]},
+  v_hampiri1:{ from:'me', text:'(kamu hampiri patung itu)', autoNext:'v_hampiri2', delay:1100 },
+  v_hampiri2:{ from:'them', text:'patung itu bergerak. dia buka mulut. dia bilang "kamu yang bikin aku di sini"', end:true, endText:'🌀 Kamu menghampiri patung. Ia bicara. "Kamu yang bikin aku di sini."' },
+  v_tetap1:{ from:'me', text:'(kamu tetap diam. berjam-jam)', autoNext:'v_tetap2', delay:1600 },
+  v_tetap2:{ from:'them', text:'(ruangan mulai gelap. satu per satu orang hilang. sampai cuma kamu dan patung itu)', end:true, endText:'🌀 Kamu diam. Semua hilang. Tinggal kamu dan patung itu. Dan patung itu... mulai bergerak.' }
+}
+
+};
+
+/* =========================================================
+   CHAT ENGINE
+   ========================================================= */
+let chatStory = null;
+
+function openApp(name){
+  const avTitle = document.getElementById('avTitle');
+  const avBody = document.getElementById('avBody');
+  const appview = document.getElementById('appview');
+
+  if(name === 'messages'){
+    if(!currentStoryId){
+      avTitle.textContent = "Messages";
+      avBody.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--dim);font-size:14px;">Pilih alur dulu di menu awal untuk membuka chat.</div>`;
+    } else {
+      buildChatUI(avTitle, avBody, currentStoryId);
+    }
+  } else {
+    const data = APP_DATA[name];
+    if(!data) return;
+    avTitle.textContent = data.title;
+    avBody.innerHTML = data.html;
+  }
+  appview.classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  if(name === 'messages'){
+    const b = document.getElementById('msgBadge');
+    if(b) b.style.display = 'none';
+  }
+}
+
+function closeApp(){
+  document.getElementById('appview').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function buildChatUI(titleEl, bodyEl, storyId){
+  titleEl.textContent = "Messages";
+  chatStory = CHAT_STORIES[storyId] || CHAT_STORIES.forest;
+
+  bodyEl.innerHTML = `
+    <div style="margin:-18px -20px 0;display:flex;flex-direction:column;height:calc(100% + 58px);">
+      <div class="chat-header">
+        <div class="chat-avatar">👤</div>
+        <div class="ch-info">
+          <div class="ch-name">Unknown</div>
+          <div class="ch-status online" id="chatStatus">online</div>
+        </div>
+        <div style="font-size:20px;color:var(--accent);">ℹ️</div>
+      </div>
+      <div class="chat-body" id="chatBody"></div>
+      <div class="chat-input-area" id="chatInputArea">
+        <textarea id="chatInput" rows="1" placeholder="iMessage"></textarea>
+        <button class="send-btn" id="sendBtn" disabled>➤</button>
+      </div>
+    </div>
+  `;
+
+  const chatBody = document.getElementById('chatBody');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  input.addEventListener('input', ()=>{
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 100) + 'px';
+    sendBtn.disabled = input.value.trim().length === 0;
+  });
+  input.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      if(input.value.trim()) sendUserMessage();
+    }
+  });
+  sendBtn.addEventListener('click', sendUserMessage);
+
+  function sendUserMessage(){
+    const txt = input.value.trim();
+    if(!txt) return;
+    appendBubble('me', txt);
+    input.value = '';
+    input.style.height = 'auto';
+    sendBtn.disabled = true;
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  runNode(chatStory, 'start', chatBody);
+}
+
+function appendBubble(from, text){
+  const body = document.getElementById('chatBody');
+  if(!body) return;
+  const row = document.createElement('div');
+  row.className = 'msg-row' + (from === 'me' ? ' me' : '');
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  b.textContent = text;
+  row.appendChild(b);
+  body.appendChild(row);
+  body.scrollTop = body.scrollHeight;
+}
+
+function showTyping(){
+  const body = document.getElementById('chatBody');
+  if(!body) return;
+  const t = document.createElement('div');
+  t.className = 'typing-indicator';
+  t.id = 'typingInd';
+  t.innerHTML = '<span></span><span></span><span></span>';
+  body.appendChild(t);
+  body.scrollTop = body.scrollHeight;
+}
+
+function hideTyping(){
+  const t = document.getElementById('typingInd');
+  if(t) t.remove();
+}
+
+function renderChoices(choices){
+  const body = document.getElementById('chatBody');
+  if(!body) return;
+  const old = body.querySelector('.choices');
+  if(old) old.remove();
+
+  const wrap = document.createElement('div');
+  wrap.className = 'choices';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn' + (c.danger ? ' danger' : '');
+    btn.textContent = c.label;
+    btn.onclick = ()=>{
+      wrap.remove();
+      appendBubble('me', c.label);
+      runNode(chatStory, c.next, body);
+    };
+    wrap.appendChild(btn);
+  });
+  body.appendChild(wrap);
+  body.scrollTop = body.scrollHeight;
+}
+
+function endStory(text){
+  const body = document.getElementById('chatBody');
+  if(!body) return;
+  const el = document.createElement('div');
+  el.style.cssText = 'margin:18px 4px;padding:16px;background:linear-gradient(135deg,#1a0b2e,#2a0a0a);border:1px solid #4a1010;border-radius:14px;font-size:13px;line-height:1.6;color:#ff9f9f;text-align:center;';
+  el.textContent = text;
+  body.appendChild(el);
+  body.scrollTop = body.scrollHeight;
+  const area = document.getElementById('chatInputArea');
+  if(area){
+    area.innerHTML = '<div style="width:100%;text-align:center;font-size:12px;color:var(--dim);padding:8px;">— Akhir alur —</div>';
+  }
+}
+
+function runNode(story, nodeId, body){
+  const node = story[nodeId];
+  if(!node) return;
+
+  if(node.from === 'me'){
+    appendBubble('me', node.text);
+  } else {
+    showTyping();
+    setTimeout(()=>{
+      hideTyping();
+      appendBubble('them', node.text);
+      if(node.choices){
+        renderChoices(node.choices);
+      } else if(node.end){
+        endStory(node.endText || '— Akhir —');
+      } else if(node.autoNext){
+        setTimeout(()=>runNode(story, node.autoNext, body), node.delay || 1200);
+      }
+    }, 700 + Math.random()*500);
+    return;
+  }
+
+  if(node.autoNext){
+    setTimeout(()=>runNode(story, node.autoNext, body), node.delay || 1000);
+  } else if(node.end){
+    endStory(node.endText || '— Akhir —');
+  } else if(node.choices){
+    setTimeout(()=>renderChoices(node.choices), 500);
+  }
+}
+
+/* =========================================================
+   CALL
+   ========================================================= */
+let callTimer = null;
+function declineCall(){
+  const s = document.getElementById('callStatus');
+  if(!s) return;
+  s.textContent = 'Declined';
+  s.style.color = 'var(--red)';
+  setTimeout(closeApp, 1200);
+}
+function acceptCall(){
+  const s = document.getElementById('callStatus');
+  if(!s) return;
+  s.textContent = 'Connected · 00:00';
+  s.style.color = 'var(--green)';
+  let sec = 0;
+  if(callTimer) clearInterval(callTimer);
+  callTimer = setInterval(()=>{
+    const av = document.getElementById('appview');
+    if(!av || !av.classList.contains('open')){ clearInterval(callTimer); callTimer=null; return; }
+    sec++;
+    s.textContent = 'Connected · ' + String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0');
+  }, 1000);
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+renderStoryMenu();
+</script>
+</body>
+  </html>
