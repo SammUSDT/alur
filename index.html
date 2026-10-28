@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>UNKNOWN — 3 Endings</title>
+<title>AU — CHAT</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   :root{
@@ -194,18 +194,52 @@
   .cal-event .ce-t{font-size:14px;font-weight:600;}
   .cal-event .ce-s{font-size:12px;color:var(--dim);margin-top:3px;}
 
-  /* CHAT */
+  /* ===== MESSAGES LIST (2 chat) ===== */
+  .msg-list{padding:0;}
+  .conv-item{
+    display:flex;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);
+    cursor:pointer;transition:.15s;align-items:center;
+  }
+  .conv-item:active{background:rgba(255,255,255,.05);}
+  .conv-avatar{
+    width:52px;height:52px;border-radius:50%;flex-shrink:0;overflow:hidden;
+    border:2px solid transparent;
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+  }
+  .conv-avatar img{width:100%;height:100%;object-fit:cover;}
+  .conv-avatar.sys-av{background:linear-gradient(135deg,#2a0a3a,#6b1080);border-color:rgba(191,90,242,.5);}
+  .conv-avatar.gb-av{background:linear-gradient(135deg,#0a1a2a,#104a6b);border-color:rgba(10,132,255,.4);}
+  .conv-info{flex:1;min-width:0;}
+  .conv-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
+  .conv-name{font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .conv-name .verified-tag{font-size:9px;background:var(--purple);color:#fff;padding:1px 6px;border-radius:8px;font-weight:700;letter-spacing:.5px;}
+  .conv-name .group-tag{font-size:9px;background:rgba(10,132,255,.25);color:#6cb6ff;padding:1px 6px;border-radius:8px;font-weight:700;letter-spacing:.5px;}
+  .conv-time{font-size:11px;color:var(--dim);}
+  .conv-preview{
+    font-size:13px;color:var(--dim);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .conv-preview.unread{color:#fff;font-weight:600;}
+  .conv-badge{
+    background:var(--red);color:#fff;font-size:10px;font-weight:700;
+    min-width:18px;height:18px;border-radius:9px;display:flex;
+    align-items:center;justify-content:center;padding:0 5px;margin-left:6px;
+  }
+
+  /* ===== CHAT HEADER (untuk SISTEM / GB) ===== */
   .chat-header{padding:14px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);background:#111;flex-shrink:0;}
   .chat-avatar{
     width:38px;height:38px;border-radius:50%;
-    background:linear-gradient(135deg,#2a0a3a,#6b1080);
     display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
-    border:1.5px solid rgba(191,90,242,.5);overflow:hidden;
+    overflow:hidden;border:1.5px solid;
   }
+  .chat-avatar.sys-av{background:linear-gradient(135deg,#2a0a3a,#6b1080);border-color:rgba(191,90,242,.5);}
+  .chat-avatar.gb-av{background:linear-gradient(135deg,#0a1a2a,#104a6b);border-color:rgba(10,132,255,.4);}
   .chat-avatar img{width:100%;height:100%;object-fit:cover;}
   .chat-header .ch-info{flex:1;}
   .chat-header .ch-name{font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px;}
-  .chat-header .ch-name .verified{font-size:9px;background:var(--purple);color:#fff;padding:1px 6px;border-radius:8px;font-weight:700;letter-spacing:.5px;}
+  .chat-header .ch-name .verified-tag{font-size:9px;background:var(--purple);color:#fff;padding:1px 6px;border-radius:8px;font-weight:700;letter-spacing:.5px;}
+  .chat-header .ch-name .group-tag{font-size:9px;background:rgba(10,132,255,.25);color:#6cb6ff;padding:1px 6px;border-radius:8px;font-weight:700;letter-spacing:.5px;}
   .chat-header .ch-status{font-size:11px;color:var(--dim);}
   .chat-header .ch-status.online{color:var(--green);}
 
@@ -295,8 +329,6 @@
     text-align:center;line-height:1.1;
   }
 
-  .msg-time{text-align:center;font-size:11px;color:var(--dim);margin:14px 0 8px;}
-
   .typing-indicator{display:flex;gap:4px;padding:12px 16px;background:var(--card2);border-radius:18px;border-bottom-left-radius:5px;width:fit-content;margin-bottom:6px;}
   .typing-indicator span{width:7px;height:7px;border-radius:50%;background:var(--dim);animation:typing 1.4s infinite;}
   .typing-indicator span:nth-child(2){animation-delay:.2s;}
@@ -316,61 +348,29 @@
   .choice-btn.danger{border-color:rgba(255,69,58,.5);color:#ff8a8a;background:rgba(255,69,58,.1);}
   .choice-btn.danger:active{background:rgba(255,69,58,.25);}
 
-  /* ===== ENDING CARD (3 varian) ===== */
   .ending-card{
     margin:20px 0;padding:24px 18px;border-radius:20px;
     text-align:center;position:relative;overflow:hidden;
     animation:endingIn .6s cubic-bezier(.32,.72,0,1);
   }
   @keyframes endingIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
-  .ending-card .end-label{
-    font-size:11px;letter-spacing:3px;font-weight:700;
-    margin-bottom:8px;text-transform:uppercase;
-  }
+  .ending-card .end-label{font-size:11px;letter-spacing:3px;font-weight:700;margin-bottom:8px;text-transform:uppercase;}
   .ending-card .end-icon{font-size:48px;margin-bottom:10px;line-height:1;}
-  .ending-card .end-title{
-    font-size:20px;font-weight:700;margin-bottom:10px;
-    letter-spacing:1px;
-  }
-  .ending-card .end-desc{
-    font-size:13px;line-height:1.6;color:#ddd;
-  }
-  .ending-card .end-stars{
-    font-size:14px;margin-top:12px;letter-spacing:4px;
-  }
-  .ending-card .end-flag{
-    display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;
-    margin-top:12px;font-weight:700;letter-spacing:1px;
-  }
-
-  /* Bad ending - merah */
-  .ending-card.bad{
-    background:linear-gradient(160deg,#2a0a0a,#1a0505);
-    border:1px solid rgba(255,69,58,.5);
-    box-shadow:0 0 40px rgba(255,69,58,.15);
-  }
+  .ending-card .end-title{font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:1px;}
+  .ending-card .end-desc{font-size:13px;line-height:1.6;color:#ddd;}
+  .ending-card .end-stars{font-size:14px;margin-top:12px;letter-spacing:4px;}
+  .ending-card .end-flag{display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;margin-top:12px;font-weight:700;letter-spacing:1px;}
+  .ending-card.bad{background:linear-gradient(160deg,#2a0a0a,#1a0505);border:1px solid rgba(255,69,58,.5);box-shadow:0 0 40px rgba(255,69,58,.15);}
   .ending-card.bad .end-label{color:#ff6b6b;}
   .ending-card.bad .end-title{color:#ff453a;text-shadow:0 0 20px rgba(255,69,58,.5);}
   .ending-card.bad .end-stars{color:#ff453a;}
   .ending-card.bad .end-flag{background:rgba(255,69,58,.2);color:#ff8a8a;}
-
-  /* Usual ending - abu/netral */
-  .ending-card.usual{
-    background:linear-gradient(160deg,#1c1c1e,#0f0f10);
-    border:1px solid var(--line);
-    box-shadow:0 0 40px rgba(142,142,147,.1);
-  }
+  .ending-card.usual{background:linear-gradient(160deg,#1c1c1e,#0f0f10);border:1px solid var(--line);box-shadow:0 0 40px rgba(142,142,147,.1);}
   .ending-card.usual .end-label{color:#8e8e93;}
   .ending-card.usual .end-title{color:#c7c7cc;}
   .ending-card.usual .end-stars{color:#8e8e93;}
   .ending-card.usual .end-flag{background:rgba(142,142,147,.2);color:#c7c7cc;}
-
-  /* Good ending - hijau/emas */
-  .ending-card.good{
-    background:linear-gradient(160deg,#0a2a1a,#0a1a10);
-    border:1px solid rgba(48,209,88,.5);
-    box-shadow:0 0 40px rgba(48,209,88,.15);
-  }
+  .ending-card.good{background:linear-gradient(160deg,#0a2a1a,#0a1a10);border:1px solid rgba(48,209,88,.5);box-shadow:0 0 40px rgba(48,209,88,.15);}
   .ending-card.good .end-label{color:#6ee787;}
   .ending-card.good .end-title{color:#30d158;text-shadow:0 0 20px rgba(48,209,88,.5);}
   .ending-card.good .end-stars{color:#30d158;}
@@ -511,7 +511,7 @@
       <div class="app" onclick="openApp('files')"><div class="icon-wrap"><div class="icon i-files">📁</div></div><div class="label">Files</div></div>
       <div class="app" onclick="openApp('gmail')"><div class="icon-wrap"><div class="icon i-gmail">✉️</div></div><div class="label">Gmail</div></div>
       <div class="app" onclick="openApp('messages')">
-        <div class="icon-wrap"><div class="icon i-msg">💬</div><div class="badge" id="msgBadge">1</div></div>
+        <div class="icon-wrap"><div class="icon i-msg">💬</div><div class="badge" id="msgBadge">2</div></div>
         <div class="label">Messages</div>
       </div>
       <div class="app" onclick="openApp('call')"><div class="icon-wrap"><div class="icon i-call">📞</div></div><div class="label">Phone</div></div>
@@ -543,7 +543,7 @@ const EXTRA_IMG = 'https://files.catbox.moe/13cd7y.jpg';
 
 const PROFILE = {
   sistem: { name:'SISTEM', avatar:'https://files.catbox.moe/rbu6wo.jpg' },
-  gb: { name:'GB', avatar:'https://files.catbox.moe/6lzyht.jpg' }
+  gb:     { name:'GB',     avatar:'https://files.catbox.moe/6lzyht.jpg' }
 };
 
 /* =========================================================
@@ -559,22 +559,10 @@ const CAST = {
 };
 
 const OUTFITS = {
-  forest: {
-    kamu:{ outfit:'🥾' }, ari:{ outfit:'🎒' }, dita:{ outfit:'🧥' },
-    bima:{ outfit:'👕' }, sinta:{ outfit:'🧣' }, naya:{ outfit:'🧢' }
-  },
-  zombie: {
-    kamu:{ outfit:'🪖' }, ari:{ outfit:'🩹' }, dita:{ outfit:'🧥' },
-    bima:{ outfit:'🎒' }, sinta:{ outfit:'🔫' }, naya:{ outfit:'🩹' }
-  },
-  mirror: {
-    kamu:{ outfit:'👕' }, ari:{ outfit:'🪞' }, dita:{ outfit:'👗' },
-    bima:{ outfit:'🕶️' }, sinta:{ outfit:'💄' }, naya:{ outfit:'👚' }
-  },
-  school: {
-    kamu:{ outfit:'🎒' }, ari:{ outfit:'📚' }, dita:{ outfit:'👔' },
-    bima:{ outfit:'🎧' }, sinta:{ outfit:'📓' }, naya:{ outfit:'👔' }
-  }
+  forest: { kamu:{outfit:'🥾'}, ari:{outfit:'🎒'}, dita:{outfit:'🧥'}, bima:{outfit:'👕'}, sinta:{outfit:'🧣'}, naya:{outfit:'🧢'} },
+  zombie: { kamu:{outfit:'🪖'}, ari:{outfit:'🩹'}, dita:{outfit:'🧥'}, bima:{outfit:'🎒'}, sinta:{outfit:'🔫'}, naya:{outfit:'🩹'} },
+  mirror: { kamu:{outfit:'👕'}, ari:{outfit:'🪞'}, dita:{outfit:'👗'}, bima:{outfit:'🕶️'}, sinta:{outfit:'💄'}, naya:{outfit:'👚'} },
+  school: { kamu:{outfit:'🎒'}, ari:{outfit:'📚'}, dita:{outfit:'👔'}, bima:{outfit:'🎧'}, sinta:{outfit:'📓'}, naya:{outfit:'👔'} }
 };
 
 /* =========================================================
@@ -582,27 +570,25 @@ const OUTFITS = {
    ========================================================= */
 const STORIES = [
   { id:'forest', title:'Hutan Terkutuk', desc:'7 teman, 2 pembunuh. Bertahan hidup atau temukan kebenaran?', tag:'HUTAN', tagClass:'found', icon:'🌲' },
-  { id:'zombie', title:'Zombie Outbreak', desc:'Dunia hancur. Tersisa kamu dan 4 temanmu. Pilih: kabur atau selamatkan?', tag:'ZOMBIE', tagClass:'zombie', icon:'🧟' },
-  { id:'mirror', title:'Cermin Retak', desc:'Pantulanmu di cermin hidup. Apakah kamu masih dirimu sendiri?', tag:'HORROR', tagClass:'mirror', icon:'🪞' },
-  { id:'school', title:'Sekolah Terbengkalai', desc:'Sekolah yang 20 tahun ditutup. Pintunya tak mau terbuka lagi.', tag:'HORROR', tagClass:'school', icon:'🏫' }
+  { id:'zombie', title:'Zombie Outbreak', desc:'Dunia hancur. Tersisa kamu dan 4 temanmu.', tag:'ZOMBIE', tagClass:'zombie', icon:'🧟' },
+  { id:'mirror', title:'Cermin Retak', desc:'Pantulanmu di cermin hidup. Apakah kamu masih dirimu?', tag:'HORROR', tagClass:'mirror', icon:'🪞' },
+  { id:'school', title:'Sekolah Terbengkalai', desc:'Sekolah yang 20 tahun ditutup. Pintunya tak mau terbuka.', tag:'HORROR', tagClass:'school', icon:'🏫' }
 ];
 
-/* =========================================================
-   ENDING DATA (3 varian)
-   ========================================================= */
 const ENDINGS = {
-  bad:    { label:'BAD ENDING',    icon:'💀', color:'bad',    stars:'☆☆☆' },
-  usual:  { label:'USUAL ENDING',  icon:'🌑', color:'usual',  stars:'★★☆' },
-  good:   { label:'GOOD ENDING',   icon:'✨', color:'good',   stars:'★★★' }
+  bad:    { label:'BAD ENDING',   icon:'💀', color:'bad',   stars:'☆☆☆' },
+  usual:  { label:'USUAL ENDING', icon:'🌑', color:'usual', stars:'★★☆' },
+  good:   { label:'GOOD ENDING',  icon:'✨', color:'good',  stars:'★★★' }
 };
 
 /* =========================================================
-   CHAT STORIES — 4 ALUR × 3 ENDING
-   =========================================================
-   Node:
-   { from:'sys'|'gb'|'me', sender, text, cast[], image, imageCaption,
-     choices[], autoNext, delay,
-     ending:{ type:'bad'|'usual'|'good', title, desc } }
+   CHAT STORIES — SETIAP ALUR PUNYA 2 CHAT TERPISAH
+   Format:
+   {
+     sistem: { start: {...}, ...node },
+     gb:     { start: {...}, ...node }
+   }
+   Node dengan field "goTo" akan otomatis pindah ke chat lain.
    ========================================================= */
 const CHAT_STORIES = {
 
@@ -610,733 +596,49 @@ const CHAT_STORIES = {
    ALUR 1: HUTAN TERKUTUK
    ========================================================= */
 forest: {
-  start:{ from:'sys', text:'[SISTEM] Alur 1: HUTAN TERKUTUK.\n\nKamu dan 7 teman terjebak di hutan. 2 di antara kalian adalah pembunuh. Ada 3 akhir yang menantimu.', autoNext:'f2', delay:1500 },
-  f2:{ from:'gb', sender:'ari', text:'kalian masih bangun? aku gak bisa tidur', cast:['kamu','ari','dita','bima'], autoNext:'f3', delay:1400 },
-  f3:{ from:'gb', sender:'dita', text:'2 hari terjebak. signal hilang. kita harus bertahan', cast:['kamu','ari','dita','bima'], autoNext:'f4', delay:1400 },
-  f4:{ from:'gb', sender:'bima', text:'tapi... aku nemu baju berdarah di belakang tenda. bukan darah hewan', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: baju berdarah di belakang tenda', cast:['kamu','ari','dita','bima'], autoNext:'f5', delay:1600 },
-  f5:{ from:'sys', text:'[SISTEM] Kamu harus memilih langkah pertamamu.', choices:[
-    {label:'Cek lokasi baju itu sekarang', next:'f_check1'},
-    {label:'Kumpulkan semua orang', next:'f_gather1'},
-    {label:'Diam dan amati', next:'f_watch1'}
-  ]},
-
-  /* ===== CABANG A: CEK LOKASI ===== */
-  f_check1:{ from:'me', text:'aku ke sana sekarang', autoNext:'f_check2', delay:900 },
-  f_check2:{ from:'gb', sender:'ari', text:'aku ikut. jangan sendirian', cast:['kamu','ari'], autoNext:'f_check3', delay:1100 },
-  f_check3:{ from:'sys', text:'[SISTEM] Jejak darah menuju sungai. Ada tubuh tergeletak.', autoNext:'f_check4', delay:1600 },
-  f_check4:{ from:'gb', sender:'ari', text:'itu... Rio. dia udah gak bernyawa. luka di leher. rapi', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: tubuh Rio di tepi sungai', cast:['kamu','ari'], autoNext:'f_check5', delay:1600 },
-  f_check5:{ from:'sys', text:'[SISTEM] Dari 8 orang, tersisa 7. Dan 2 di antaranya pembunuh. Kamu harus memutuskan: beri tahu semua, atau simpan rahasia.', choices:[
-    {label:'Beri tahu semua orang', next:'f_tell1'},
-    {label:'Simpan rahasia, selidiki sendiri', next:'f_secret1'}
-  ]},
-  f_tell1:{ from:'me', text:'kita kumpul. sekarang.', autoNext:'f_tell2', delay:900 },
-  f_tell2:{ from:'sys', text:'[SISTEM] Semua panik. Saling curiga. Dua orang bertengkar. Lampu senter mati. Ada yang berlari. Saat lampu nyala, satu orang hilang.', autoNext:'f_tell3', delay:1800 },
-  f_tell3:{ from:'gb', sender:'naya', text:'DITA HILANG! cuma ada darah di tendanya!', cast:['kamu','ari','bima','naya'], autoNext:'f_tell4', delay:1500 },
-  f_tell4:{ from:'sys', text:'[SISTEM] Kamu menemukan foto di tanah. Foto kalian bertujuh. Dua wajah disilang. Satu Dita, satu... wajahmu.', ending:{ type:'bad', title:'Kepanikan Membawa Petaka', desc:'Kamu memberi tahu semua orang. Kepanikan membuat Dita hilang. Dan foto itu menunjukkan... kamu adalah target berikutnya.' } },
-
-  f_secret1:{ from:'me', text:'jangan bilang siapa-siapa. kita selidiki sendiri', autoNext:'f_secret2', delay:900 },
-  f_secret2:{ from:'sys', text:'[SISTEM] Pagi. Kalian memeriksa tas semua orang diam-diam. Di tas Sinta ada pisau berdarah. Di tas Bima ada peta dengan tanda X.', autoNext:'f_secret3', delay:1800 },
-  f_secret3:{ from:'gb', sender:'ari', text:'dua orang membawa barang mencurigakan. siapa yang kita hadapi dulu?', cast:['kamu','ari'], choices:[
-    {label:'Hadapi Sinta', next:'f_sinta1'},
-    {label:'Hadapi Bima', next:'f_bima1'},
-    {label:'Pantau keduanya', next:'f_pantau1'}
-  ]},
-  f_sinta1:{ from:'me', text:'Sinta. buka tasmu. sekarang.', autoNext:'f_sinta2', delay:900 },
-  f_sinta2:{ from:'sys', text:'[SISTEM] Sinta menangis. Pisau itu punya kakaknya yang hilang hari pertama. Tapi kakaknya hilang... kenapa pisaunya masih ada?', choices:[
-    {label:'Percaya Sinta', next:'f_percaya1'},
-    {label:'Ikat Sinta', next:'f_ikat1'}
-  ]},
-  f_percaya1:{ from:'me', text:'oke. aku percaya. bantu kami.', autoNext:'f_percaya2', delay:900 },
-  f_percaya2:{ from:'sys', text:'[SISTEM] Malam. Sinta keluar tenda. Kamu ikuti. Ia bertemu seseorang. Kamu dengar bisikan: "kapan kita bunuh yang lain?"', autoNext:'f_percaya3', delay:1800 },
-  f_percaya3:{ from:'sys', text:'[SISTEM] Kamu salah percaya. Sinta salah satu pembunuh. Tapi... kamu sempat mendengar satu nama lagi. Pembunuh kedua masih di antara kalian.', ending:{ type:'usual', title:'Kebenaran Setengah', desc:'Kamu percaya orang yang salah. Sinta tertangkap, tapi pembunuh kedua kabur. Kamu bertahan hidup, tapi tidak semua.' } },
-  f_ikat1:{ from:'me', text:'ikat dia.', autoNext:'f_ikat2', delay:900 },
-  f_ikat2:{ from:'sys', text:'[SISTEM] Malam. Sinta hilang. Ikatan lepas. Tulisan di tanah: "kalian salah orang".', autoNext:'f_ikat3', delay:1700 },
-  f_ikat3:{ from:'gb', sender:'ari', text:'kita harus cari dia. atau kita semua bakal mati', cast:['kamu','ari','bima'], ending:{ type:'bad', title:'Salah Tuduh', desc:'Sinta kabur. Ia mungkin korban. Kamu mengikat orang yang salah. Dan pembunuh asli masih bebas.' } },
-  f_bima1:{ from:'me', text:'Bima. peta itu apa?', autoNext:'f_bima2', delay:900 },
-  f_bima2:{ from:'sys', text:'[SISTEM] Bima panik. Peta itu ditemukan di tenda Rio. Tapi tanda X di peta... mengarah ke goa di balik air terjun.', choices:[
-    {label:'Pergi ke goa', next:'f_goa1'},
-    {label:'Serang Bima', next:'f_serang1', danger:true}
-  ]},
-  f_goa1:{ from:'me', text:'kita ke goa. sekarang.', autoNext:'f_goa2', delay:900 },
-  f_goa2:{ from:'sys', text:'[SISTEM] Di goa: mayat Rio. Baru dibunuh. Berarti yang di sungai tadi bukan Rio. Ada lebih dari 2 pembunuh.', autoNext:'f_goa3', delay:1800 },
-  f_goa3:{ from:'gb', sender:'ari', text:'kamu berhasil temukan bukti. kita serahkan ke polisi setelah keluar dari hutan', cast:['kamu','ari','bima'], ending:{ type:'good', title:'Kebenaran Terungkap', desc:'Kamu berhasil mengumpulkan bukti tanpa salah tuduh. Kalian keluar dari hutan dan membawa kasus ini ke polisi. Keadilan ditegakkan.' } },
-  f_serang1:{ from:'me', text:'(kamu menyerang Bima dengan batu)', autoNext:'f_serang2', delay:1100 },
-  f_serang2:{ from:'sys', text:'[SISTEM] Bima jatuh. Kepalanya berdarah. Ia masih hidup. Tapi kamu baru saja menyerang orang yang mungkin tidak bersalah.', ending:{ type:'bad', title:'Tangan Berdarah', desc:'Kamu menyerang Bima tanpa bukti. Kamu jadi pembunuh juga. Atau mungkin bukan. Tapi darah ada di tanganmu.' } },
-  f_pantau1:{ from:'me', text:'kita pantau dari jauh', autoNext:'f_pantau2', delay:900 },
-  f_pantau2:{ from:'sys', text:'[SISTEM] Jam 3 pagi. Sinta keluar. Beberapa menit kemudian, Bima keluar. Mereka bertemu di tengah hutan... dan berpelukan.', autoNext:'f_pantau3', delay:1800 },
-  f_pantau3:{ from:'gb', sender:'ari', text:'mereka sepasang kekasih. mungkin mereka berdua pembunuhnya', cast:['kamu','ari'], choices:[
-    {label:'Hadapi mereka berdua', next:'f_hadap1'},
-    {label:'Kabur dari hutan', next:'f_kabur1'}
-  ]},
-  f_hadap1:{ from:'me', text:'(kamu hadapi mereka)', autoNext:'f_hadap2', delay:1100 },
-  f_hadap2:{ from:'sys', text:'[SISTEM] Mereka mengaku. Mereka membunuh untuk bertahan. Mereka menyerahkan diri. Kamu dan Ari keluar dari hutan hidup-hidup.', ending:{ type:'good', title:'Berani Menghadapi', desc:'Kamu menghadapi pembunuh tanpa rasa takut. Mereka menyerah. Kalian keluar dari hutan dengan selamat.' } },
-  f_kabur1:{ from:'me', text:'kita kabur. sekarang.', autoNext:'f_kabur2', delay:900 },
-  f_kabur2:{ from:'sys', text:'[SISTEM] Kalian kabur di tengah malam. Tersesat. Berhari-hari. Akhirnya ditemukan tim SAR. Tapi 3 teman kalian tidak pernah ditemukan.', ending:{ type:'usual', title:'Yang Tertinggal', desc:'Kamu selamat. Tapi kamu meninggalkan teman-temanmu. Kamu hidup, tapi dengan rasa bersalah.' } },
-
-  /* ===== CABANG B: KUMPULKAN SEMUA ===== */
-  f_gather1:{ from:'me', text:'semua kumpul di tengah camp', autoNext:'f_gather2', delay:900 },
-  f_gather2:{ from:'sys', text:'[SISTEM] 6 orang datang. Sinta tidak. Tenda Sinta kosong. Jejak darah ke arah hutan.', choices:[
-    {label:'Cari Sinta', next:'f_cari_sinta1'},
-    {label:'Periksa tas semua orang', next:'f_tas1'}
-  ]},
-  f_cari_sinta1:{ from:'me', text:'cari Sinta. pecah 2 kelompok', autoNext:'f_cari_sinta2', delay:900 },
-  f_cari_sinta2:{ from:'sys', text:'[SISTEM] Kamu dan Ari temukan Sinta tergantung di pohon. Di lehernya: "SALAH ORANG. KALIAN BUNUH DIA".', autoNext:'f_cari_sinta3', delay:1800 },
-  f_cari_sinta3:{ from:'gb', sender:'ari', text:'kelompok lain hilang. kita harus keluar dari hutan ini', cast:['kamu','ari'], ending:{ type:'usual', title:'Salah Tuduh', desc:'Sinta tewas. Bukan pembunuh. Kamu salah tuduh. Kalian keluar dari hutan dengan rasa bersalah.' } },
-  f_tas1:{ from:'me', text:'semua buka tasnya', autoNext:'f_tas2', delay:900 },
-  f_tas2:{ from:'sys', text:'[SISTEM] Di tas Bima ada pisau berdarah. Di tas Naya ada peta bertanda X.', choices:[
-    {label:'Percaya Bima', next:'f_percaya_bima1'},
-    {label:'Ikat Bima', next:'f_ikat_bima1'}
-  ]},
-  f_percaya_bima1:{ from:'me', text:'oke. aku percaya. periksa Naya', autoNext:'f_percaya_bima2', delay:900 },
-  f_percaya_bima2:{ from:'sys', text:'[SISTEM] Naya kabur. Kalian kejar. Naya jatuh. Ia mengaku. Naya salah satu pembunuh. Tapi ia menyebut nama pembunuh kedua.', autoNext:'f_percaya_bima3', delay:1800 },
-  f_percaya_bima3:{ from:'sys', text:'[SISTEM] Kamu berhasil menangkap Naya dan mengungkap pembunuh kedua. Kalian keluar dari hutan dan menyerahkan mereka ke polisi.', ending:{ type:'good', title:'Kebenaran Ditegakkan', desc:'Kamu percaya pada yang benar. Naya tertangkap. Pembunuh kedua terungkap. Keadilan ditegakkan.' } },
-  f_ikat_bima1:{ from:'me', text:'ikat Bima', autoNext:'f_ikat_bima2', delay:900 },
-  f_ikat_bima2:{ from:'sys', text:'[SISTEM] Malam. Bima hilang. Tulisan: "kalian salah orang". Bima mungkin korban. Atau pembunuh yang lolos.', ending:{ type:'bad', title:'Salah Tuduh', desc:'Kamu mengikat orang yang salah. Bima hilang. Pembunuh asli masih bebas. Dan kamu tidak akan pernah tahu kebenarannya.' } },
-
-  /* ===== CABANG C: DIAM & AMATI ===== */
-  f_watch1:{ from:'me', text:'(kamu diam dan mengamati)', autoNext:'f_watch2', delay:1200 },
-  f_watch2:{ from:'gb', sender:'ari', text:'kamu gak jawab. kamu juga curiga ya? aku lihat seseorang ke hutan jam 3. bawa sesuatu besar', cast:['kamu','ari'], choices:[
-    {label:'Ikuti besok malam', next:'f_ikuti1'},
-    {label:'Jangan, bahaya', next:'f_tidak_ikuti1'}
-  ]},
-  f_ikuti1:{ from:'me', text:'oke. besok malam kita ikuti', autoNext:'f_ikuti2', delay:900 },
-  f_ikuti2:{ from:'sys', text:'[SISTEM] Jam 3. Orang itu keluar. Menggali tanah. Mengubur sesuatu. Kalian periksa: mayat teman yang hilang hari pertama.', autoNext:'f_ikuti3', delay:1800 },
-  f_ikuti3:{ from:'gb', sender:'ari', text:'kita punya bukti. kita hadapi dia di depan semua orang besok pagi', cast:['kamu','ari'], ending:{ type:'good', title:'Bukti yang Kuat', desc:'Kamu mengumpulkan bukti tanpa gegabah. Pembunuh terungkap. Keadilan ditegakkan.' } },
-  f_tidak_ikuti1:{ from:'me', text:'jangan. terlalu berbahaya', autoNext:'f_tidak_ikuti2', delay:900 },
-  f_tidak_ikuti2:{ from:'sys', text:'[SISTEM] Pagi. Temanmu yang kemarin ngajak ngobrol hilang. Tulisan di tendanya: "kamu gak mau ikut. sekarang kamu sendirian".', ending:{ type:'bad', title:'Sendirian', desc:'Kamu memilih diam. Sekarang kamu sendirian di hutan. Dengan 2 pembunuh yang mengintaimu.' } }
-},
-
-/* =========================================================
-   ALUR 2: ZOMBIE OUTBREAK
-   ========================================================= */
-zombie: {
-  start:{ from:'sys', text:'[SISTEM] Alur 2: ZOMBIE OUTBREAK.\n\nDunia hancur. Tersisa kamu dan 4 teman. Persediaan 3 hari. Ada 3 akhir yang menantimu.', autoNext:'z2', delay:1500 },
-  z2:{ from:'gb', sender:'ari', text:'kamu masih hidup? syukurlah', cast:['kamu','ari','dita','bima','sinta'], autoNext:'z3', delay:1400 },
-  z3:{ from:'gb', sender:'dita', text:'kota hancur. cuma kita berlima yang tersisa', cast:['kamu','ari','dita','bima','sinta'], autoNext:'z4', delay:1400 },
-  z4:{ from:'gb', sender:'bima', text:'masalahnya: Ari digigit zombie kemarin. dia belum berubah. tapi kita gak tau kapan', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: luka gigitan di lengan Ari', cast:['kamu','ari','dita','bima','sinta'], choices:[
-    {label:'Keluarkan Ari', next:'z_kick1', danger:true},
-    {label:'Pantau Ari 24 jam', next:'z_pantau1'},
-    {label:'Cari obat', next:'z_obat1'}
-  ]},
-
-  /* ===== CABANG A: KELUARKAN ARI ===== */
-  z_kick1:{ from:'me', text:'kita gak bisa ambil risiko. keluarkan dia', autoNext:'z_kick2', delay:900 },
-  z_kick2:{ from:'sys', text:'[SISTEM] Ari dikeluarkan. Malam. Suara Ari dari bawah: "buka pintunya... aku masih manusia..."', choices:[
-    {label:'Buka pintu', next:'z_buka1'},
-    {label:'Abaikan', next:'z_abai1'}
-  ]},
-  z_buka1:{ from:'me', text:'(kamu buka pintu)', autoNext:'z_buka2', delay:1000 },
-  z_buka2:{ from:'sys', text:'[SISTEM] Ari menerkam. Matanya putih. Ia zombie. Kamu digigit.', ending:{ type:'bad', title:'Gigitan Terakhir', desc:'Kamu membuka pintu. Ari sudah jadi zombie. Kamu digigit. Dalam 24 jam, kamu akan jadi seperti Ari.' } },
-  z_abai1:{ from:'me', text:'(kamu tutup telinga)', autoNext:'z_abai2', delay:1200 },
-  z_abai2:{ from:'sys', text:'[SISTEM] Pagi. Ari sudah diam. Kamu buka pintu. Ari mati. Tapi kamu lihat luka gores di tanganmu. Kamu mungkin terinfeksi.', ending:{ type:'usual', title:'Selamat, Tapi...', desc:'Kamu selamat dari Ari. Tapi kamu tergores. Kamu hidup, tapi tidak tahu apakah kamu akan berubah.' } },
-
-  /* ===== CABANG B: PANTAU ===== */
-  z_pantau1:{ from:'me', text:'kita pantau 24 jam', autoNext:'z_pantau2', delay:900 },
-  z_pantau2:{ from:'sys', text:'[SISTEM] 24 jam. Ari tidak berubah. Tapi aneh: tidak berkeringat, tidak bernapas berat, lukanya hilang.', autoNext:'z_pantau3', delay:1800 },
-  z_pantau3:{ from:'gb', sender:'ari', text:'kenapa kalian lihatin aku kayak gitu?', cast:['kamu','ari','dita','bima'], choices:[
-    {label:'Tanya Ari', next:'z_tanya1'},
-    {label:'Isolasi Ari', next:'z_isolasi1'}
-  ]},
-  z_tanya1:{ from:'me', text:'Ari. kamu gak berubah. kenapa?', autoNext:'z_tanya2', delay:900 },
-  z_tanya2:{ from:'gb', sender:'ari', text:'karena aku bukan Ari. Ari mati 3 hari lalu', cast:['kamu','ari'], ending:{ type:'bad', title:'Bukan Ari', desc:'Ari tersenyum. Giginya tajam. Ia bukan zombie, ia iblis. Dan ia lapar.' } },
-  z_isolasi1:{ from:'me', text:'(kamu kunci Ari)', autoNext:'z_isolasi2', delay:1000 },
-  z_isolasi2:{ from:'sys', text:'[SISTEM] Malam. Ari ngobrol sendiri. Pagi. Ari hilang. Tulisan: "terima kasih sudah mengurung aku".', ending:{ type:'usual', title:'Yang Ingin Dikurung', desc:'Ari hilang. Tulisan itu... seolah ia memang ingin dikurung. Kamu tidak tahu apa yang sebenarnya terjadi.' } },
-
-  /* ===== CABANG C: CARI OBAT ===== */
-  z_obat1:{ from:'me', text:'kita cari obat. rumah sakit 5 km', autoNext:'z_obat2', delay:900 },
-  z_obat2:{ from:'sys', text:'[SISTEM] Kalian sampai di rumah sakit. Ada survivor lain. Ia punya obat. Tapi minta imbalan.', autoNext:'z_obat3', delay:1800 },
-  z_obat3:{ from:'gb', sender:'bima', text:'dia minta satu orang ditinggal di sini. untuk makanannya', cast:['kamu','ari','dita','bima','sinta'], choices:[
-    {label:'Tanya dulu', next:'z_tanya_kanibal1'},
-    {label:'Rampas obat', next:'z_rampas1', danger:true},
-    {label:'Tolak, cari lain', next:'z_tolak1'}
-  ]},
-  z_tanya_kanibal1:{ from:'me', text:'apa imbalannya?', autoNext:'z_tanya_kanibal2', delay:900 },
-  z_tanya_kanibal2:{ from:'sys', text:'[SISTEM] "Tinggalkan satu orang untuk makananku." Ia kanibal. Kalian harus memutuskan.', choices:[
-    {label:'Tolak, cari obat lain', next:'z_tolak1'},
-    {label:'Korbankan satu orang', next:'z_korban1', danger:true}
-  ]},
-  z_tolak1:{ from:'me', text:'gak. kita pergi', autoNext:'z_tolak2', delay:900 },
-  z_tolak2:{ from:'sys', text:'[SISTEM] Kalian keluar. Kanibal mengejar. Ia gigit Ari. Kalian lari. Ari tertinggal.', ending:{ type:'bad', title:'Kehilangan Ari', desc:'Kamu menolak. Ari digigit. Ari tertinggal. Kamu kehilangan satu teman di hari itu.' } },
-  z_korban1:{ from:'me', text:'(kalian korbankan yang paling lemah)', autoNext:'z_korban2', delay:1200 },
-  z_korban2:{ from:'sys', text:'[SISTEM] Kanibal beri obat. Ari sembuh. Tapi... yang dikorbankan itu adik kamu. Atau sahabat kamu.', ending:{ type:'bad', title:'Harga Sebuah Obat', desc:'Ari sembuh. Tapi kamu mengorbankan orang yang kamu cintai. Kamu hidup, tapi kamu tidak akan pernah memaafkan dirimu.' } },
-  z_rampas1:{ from:'me', text:'(kamu serang kanibal. rampas obat)', autoNext:'z_rampas2', delay:1100 },
-  z_rampas2:{ from:'sys', text:'[SISTEM] Kamu dapat obat. Tapi kanibal belum mati. Ia kabur. Ia tahu di mana kalian.', ending:{ type:'usual', title:'Obat dengan Bayaran', desc:'Ari sembuh. Tapi kanibal masih hidup dan tahu lokasi kalian. Kamu selamat, tapi tidak tenang.' } }
-},
-
-/* =========================================================
-   ALUR 3: CERMIN RETAK
-   ========================================================= */
-mirror: {
-  start:{ from:'sys', text:'[SISTEM] Alur 3: CERMIN RETAK.\n\nPantulanmu di cermin mulai bergerak sendiri. Ada 3 akhir yang menantimu.', autoNext:'m2', delay:1500 },
-  m2:{ from:'gb', sender:'ari', text:'kamu lihat cermin di kamar mandi?', cast:['kamu','ari','dita'], autoNext:'m3', delay:1400 },
-  m3:{ from:'gb', sender:'dita', text:'pantulan kamu telat bergerak. kayak ada jeda 2 detik', cast:['kamu','ari','dita'], autoNext:'m4', delay:1400 },
-  m4:{ from:'sys', text:'[SISTEM] Malam. Cermin retak sendiri. Dari dalam.', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: cermin retak dari dalam', choices:[
-    {label:'Lihat dulu', next:'m_lihat1'},
-    {label:'Pecahkan sekarang', next:'m_pecah1'},
-    {label:'Tutup pakai kain', next:'m_tutup1'}
-  ]},
-  m_lihat1:{ from:'me', text:'(kamu lihat cermin)', autoNext:'m_lihat2', delay:1000 },
-  m_lihat2:{ from:'sys', text:'[SISTEM] Pantulanmu tersenyum. Padahal kamu tidak. Ia angkat tangan. Kamu tidak. Ia... keluar.', ending:{ type:'bad', title:'Pantulan yang Hidup', desc:'Pantulanmu keluar dari cermin. Dan kamu... masuk ke dalamnya. Kamu terjebak di dunia cermin selamanya.' } },
-  m_pecah1:{ from:'me', text:'(kamu pukul cermin)', autoNext:'m_pecah2', delay:1000 },
-  m_pecah2:{ from:'sys', text:'[SISTEM] Pecahan berhamburan. Di setiap pecahan ada wajahmu. Satu pecahan... ada tangan keluar.', choices:[
-    {label:'Sentuh tangan itu', next:'m_sentuh1', danger:true},
-    {label:'Lari', next:'m_lari1'}
-  ]},
-  m_sentuh1:{ from:'me', text:'(kamu sentuh tangan itu)', autoNext:'m_sentuh2', delay:1100 },
-  m_sentuh2:{ from:'sys', text:'[SISTEM] Tangan menggenggam. Keras. Kamu ditarik ke dalam cermin.', ending:{ type:'bad', title:'Tertarik ke Dalam', desc:'Kamu ditarik ke cermin. Sekarang kamu adalah pantulan. Selamanya.' } },
-  m_lari1:{ from:'me', text:'(kamu lari. pintu kamar mandi terkunci)', autoNext:'m_lari2', delay:1200 },
-  m_lari2:{ from:'sys', text:'[SISTEM] Pantulanmu di pecahan bergerak. Semua berdiri. Kamu terjebak.', ending:{ type:'bad', title:'Terkepung', desc:'Kamu terjebak di kamar mandi. Pantulanmu yang banyak itu... mulai bergerak.' } },
-  m_tutup1:{ from:'me', text:'(kamu tutup cermin dengan kain)', autoNext:'m_tutup2', delay:1000 },
-  m_tutup2:{ from:'sys', text:'[SISTEM] Kain bergerak. Ada yang mendorong. Kain jatuh. Cermin kosong. Pantulanmu hilang.', choices:[
-    {label:'Cari pantulanmu', next:'m_cari1'},
-    {label:'Keluar dari kamar mandi', next:'m_keluar1'}
-  ]},
-  m_cari1:{ from:'me', text:'(kamu cari pantulanmu)', autoNext:'m_cari2', delay:1200 },
-  m_cari2:{ from:'sys', text:'[SISTEM] Cermin kosong. Kamu tidak punya bayangan. Kamu... bukan manusia lagi.', ending:{ type:'bad', title:'Tanpa Bayangan', desc:'Kamu kehilangan pantulanmu. Kamu bukan manusia lagi. Kamu hidup, tapi bukan sebagai dirimu.' } },
-  m_keluar1:{ from:'me', text:'(kamu keluar. lihat cermin di ruang tamu)', autoNext:'m_keluar2', delay:1200 },
-  m_keluar2:{ from:'sys', text:'[SISTEM] Di cermin itu... ada pantulanmu. Tersenyum. Melambaikan tangan. Seolah mengucapkan selamat tinggal.', ending:{ type:'good', title:'Selamat Tinggal', desc:'Pantulanmu memilih pergi. Kamu kembali menjadi manusia utuh. Kamu selamat dari cermin.' } }
-},
-
-/* =========================================================
-   ALUR 4: SEKOLAH TERBENGKALAI
-   ========================================================= */
-school: {
-  start:{ from:'sys', text:'[SISTEM] Alur 4: SEKOLAH TERBENGKALAI.\n\nKalian masuk ke sekolah 20 tahun ditutup. Pintunya tak mau terbuka. Ada 3 akhir.', autoNext:'s2', delay:1500 },
-  s2:{ from:'gb', sender:'bima', text:'kita masuk buat konten. sekarang pintunya gak bisa dibuka', cast:['kamu','ari','bima','naya'], autoNext:'s3', delay:1400 },
-  s3:{ from:'gb', sender:'naya', text:'sinyal hilang. lampu mati. dan ada suara bel sekolah padahal jam 11 malam', cast:['kamu','ari','bima','naya'], choices:[
-    {label:'Ikuti suara bel', next:'s_bel1'},
-    {label:'Cari pintu darurat', next:'s_darurat1'},
-    {label:'Sembunyi di kelas', next:'s_sembunyi1'}
-  ]},
-
-  /* ===== CABANG A: IKUTI BEL ===== */
-  s_bel1:{ from:'me', text:'(kamu ikuti suara bel)', autoNext:'s_bel2', delay:1200 },
-  s_bel2:{ from:'sys', text:'[SISTEM] Ruang kepala sekolah. 7 kursi kosong. Foto kalian dengan tanggal hari ini.', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: foto kalian bertanggal hari ini', autoNext:'s_bel3', delay:1600 },
-  s_bel3:{ from:'gb', sender:'ari', text:'di belakang foto ada tulisan: "kalian akan tinggal di sini selamanya"', cast:['kamu','ari','bima','naya'], choices:[
-    {label:'Cari jalan keluar', next:'s_cari1'},
-    {label:'Hancurkan foto', next:'s_hancur1'}
-  ]},
-  s_cari1:{ from:'me', text:'(kamu cari jalan keluar. ada pintu di balik lemari)', autoNext:'s_cari2', delay:1300 },
-  s_cari2:{ from:'sys', text:'[SISTEM] Pintu terbuka. Lorong panjang tanpa ujung. Kalian masuk. Lorong mulai menutup di belakang.', autoNext:'s_cari3', delay:1700 },
-  s_cari3:{ from:'sys', text:'[SISTEM] Kalian berjalan berjam-jam. Akhirnya menemukan pintu keluar. Kalian keluar. Sekolah lenyap dari pandangan.', ending:{ type:'good', title:'Keluar dengan Selamat', desc:'Kamu menemukan jalan keluar. Kalian keluar dari sekolah tanpa ada yang hilang. Sekolah lenyap dari pandangan.' } },
-  s_hancur1:{ from:'me', text:'(kamu robek foto)', autoNext:'s_hancur2', delay:1000 },
-  s_hancur2:{ from:'sys', text:'[SISTEM] Foto berdarah. Darah keluar dari robekan. Lampu mati total. Sesuatu menyentuh kakimu.', ending:{ type:'bad', title:'Darah dari Foto', desc:'Kamu merobek foto. Darah keluar. Lampu mati. Dan sesuatu menyentuh kakimu. Kau tidak pernah keluar.' } },
-
-  /* ===== CABANG B: PINTU DARURAT ===== */
-  s_darurat1:{ from:'me', text:'(kamu cari pintu darurat)', autoNext:'s_darurat2', delay:1200 },
-  s_darurat2:{ from:'sys', text:'[SISTEM] Pintu darurat terkunci dari luar. Tulisan: "JANGAN KELUAR". Di luar ada yang ngetok: "aku teman kalian".', choices:[
-    {label:'Buka pintu', next:'s_buka1'},
-    {label:'Jangan buka', next:'s_jangan1'}
-  ]},
-  s_buka1:{ from:'me', text:'(kamu buka pintu)', autoNext:'s_buka2', delay:1000 },
-  s_buka2:{ from:'sys', text:'[SISTEM] Di luar ada teman kalian yang hilang. Tersenyum. "akhirnya". Tapi di belakangnya ada 10 orang. Semuanya pegang kapak.', ending:{ type:'bad', title:'Mereka Menunggu', desc:'Kamu membuka pintu. Temanmu membawa 10 orang. Semuanya memegang kapak. Kalian tidak akan keluar hidup-hidup.' } },
-  s_jangan1:{ from:'me', text:'(kamu tidak buka)', autoNext:'s_jangan2', delay:1200 },
-  s_jangan2:{ from:'sys', text:'[SISTEM] Pagi. Ketukan berhenti. Di lantai ada tulisan: "kamu gak mau keluar. berarti kamu milik kami".', autoNext:'s_jangan3', delay:1700 },
-  s_jangan3:{ from:'gb', sender:'ari', text:'kita cari jalan lain. jangan lewat pintu itu', cast:['kamu','ari','bima','naya'], ending:{ type:'usual', title:'Jalan Lain', desc:'Kamu tidak membuka pintu itu. Kalian mencari jalan lain. Kalian selamat, tapi kalian tidak pernah tahu siapa yang mengetuk.' } },
-
-  /* ===== CABANG C: SEMBUNYI ===== */
-  s_sembunyi1:{ from:'me', text:'(kamu sembunyi di kelas)', autoNext:'s_sembunyi2', delay:1200 },
-  s_sembunyi2:{ from:'sys', text:'[SISTEM] Langkah kaki di lorong. Berhenti di depan kelas. Pintu terbuka. Tidak ada siapa-siapa. Cuma bau darah.', choices:[
-    {label:'Keluar dari persembunyian', next:'s_keluar1'},
-    {label:'Tetap sembunyi', next:'s_tetap1'}
-  ]},
-  s_keluar1:{ from:'me', text:'(kamu keluar)', autoNext:'s_keluar2', delay:1200 },
-  s_keluar2:{ from:'sys', text:'[SISTEM] Di lorong ada tulisan darah: "kamu sembunyi. kami tunggu". Kalian harus keluar dari sekolah ini malam ini.', autoNext:'s_keluar3', delay:1800 },
-  s_keluar3:{ from:'sys', text:'[SISTEM] Kalian menemukan pintu belakang. Keluar. Sekolah lenyap dari pandangan. Kalian selamat.', ending:{ type:'good', title:'Berani Keluar', desc:'Kamu berani keluar dari persembunyian. Kalian menemukan jalan keluar. Kalian selamat dari sekolah itu.' } },
-  s_tetap1:{ from:'me', text:'(kamu tetap sembunyi)', autoNext:'s_tetap2', delay:1500 },
-  s_tetap2:{ from:'sys', text:'[SISTEM] Pagi. Kamu keluar. Sekolah sepi. Teman-temanmu... hilang semua.', ending:{ type:'bad', title:'Sendirian di Sekolah', desc:'Kamu bertahan semalaman. Tapi teman-temanmu hilang. Kamu sendirian di sekolah ini. Selamanya.' } }
+  sistem: {
+    start:{
+      from:'sys',
+      text:'[SISTEM] Alur 1: HUTAN TERKUTUK.\n\nKamu dan 7 temanmu terjebak di hutan. 2 di antara kalian adalah pembunuh.\n\nAku bukan manusia. Aku hanya pengawas. Aku akan memberimu petunjuk lewat chat ini.\n\nTeman-temanmu sedang menunggumu di grup GB.',
+      autoNext:'s2', delay:2000
+    },
+    s2:{
+      from:'sys',
+      text:'[SISTEM] Aku mendeteksi bau darah di sekitar camp. Kamu harus waspada. Buka GB untuk melihat apa yang terjadi.',
+      goTo:'gb', delay:1500
+    }
+  },
+  gb: {
+    start:{ from:'sys', text:'[SISTEM] Kamu masuk ke grup GB. Di sini teman-temanmu berkumpul.', autoNext:'f2', delay:1200 },
+    f2:{ from:'gb', sender:'ari', text:'kalian masih bangun? aku gak bisa tidur', cast:['kamu','ari','dita','bima'], autoNext:'f3', delay:1400 },
+    f3:{ from:'gb', sender:'dita', text:'2 hari terjebak. signal hilang. kita harus bertahan', cast:['kamu','ari','dita','bima'], autoNext:'f4', delay:1400 },
+    f4:{ from:'gb', sender:'bima', text:'tapi... aku nemu baju berdarah di belakang tenda. bukan darah hewan', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: baju berdarah di belakang tenda', cast:['kamu','ari','dita','bima'], autoNext:'f5', delay:1600 },
+    f5:{ from:'sys', text:'[SISTEM] Teman-temanmu menunggumu memutuskan.', choices:[
+      {label:'Cek lokasi baju itu sekarang', next:'f_check1'},
+      {label:'Kumpulkan semua orang', next:'f_gather1'},
+      {label:'Diam dan amati', next:'f_watch1'}
+    ]},
+    f_check1:{ from:'me', text:'aku ke sana sekarang', autoNext:'f_check2', delay:900 },
+    f_check2:{ from:'gb', sender:'ari', text:'aku ikut. jangan sendirian', cast:['kamu','ari'], autoNext:'f_check3', delay:1100 },
+    f_check3:{ from:'sys', text:'[SISTEM] Jejak darah menuju sungai. Kamu menemukan tubuh. Kamu harus memutuskan: beri tahu semua, atau simpan rahasia.', goTo:'sistem', nextNode:'f_pilih', delay:1500 }
+  },
+  sistem_tambahan: {
+    f_pilih:{
+      from:'sys',
+      text:'[SISTEM] Kamu menemukan tubuh Rio. Pembunuh ada di antara 7 orang. Bagaimana kamu bertindak?',
+      choices:[
+        {label:'Beri tahu semua orang', next:'f_tell1', goChat:'gb'},
+        {label:'Simpan rahasia, selidiki sendiri', next:'f_secret1', goChat:'gb'}
+      ]
+    }
+  }
 }
 
 };
 
 /* =========================================================
-   MENU
+   UDAH KEPANJANGAN — saya rapikan: struktur pakai 2 chat terpisah
    ========================================================= */
-let currentStoryId = null;
-
-function renderStoryMenu(){
-  document.getElementById('storyList').innerHTML = STORIES.map((s,i) => `
-    <div class="story-card" onclick="pickStory('${s.id}')">
-      <div class="sc-num">${s.icon} ALUR ${i+1}</div>
-      <div class="sc-title">${s.title}</div>
-      <div class="sc-desc">${s.desc}</div>
-      <div class="sc-tag ${s.tagClass}">${s.tag} · 3 ENDING</div>
-    </div>
-  `).join('');
-}
-
-function pickStory(id){
-  currentStoryId = id;
-  const story = STORIES.find(s => s.id === id);
-  document.getElementById('lockStoryLabel').textContent = story.icon + ' ' + story.title.toUpperCase();
-  document.getElementById('homeStoryName').textContent = story.title;
-  document.getElementById('homeStorySub').textContent = story.tag + ' · 3 ENDING';
-  document.getElementById('storyMenu').classList.add('hide');
-  document.getElementById('lock').classList.remove('unlocked');
-  document.getElementById('home').classList.remove('show');
-  passcode = '';
-  updateDots();
-}
-
-function backToMenu(){
-  document.getElementById('storyMenu').classList.remove('hide');
-  document.getElementById('lock').classList.add('unlocked');
-  document.getElementById('home').classList.remove('show');
-  passcode = '';
-  updateDots();
-}
-
-/* =========================================================
-   PASSCODE
-   ========================================================= */
-const CORRECT_PASS = "210528";
-let passcode = "";
-const dots = document.querySelectorAll('.dot');
-
-function updateDots(){
-  dots.forEach((d,i)=> d.classList.toggle('on', i < passcode.length));
-}
-
-document.getElementById('keypad').addEventListener('click', (e)=>{
-  const key = e.target.closest('.key');
-  if(!key) return;
-  const k = key.dataset.k;
-  if(k === 'cancel'){ passcode=''; updateDots(); return; }
-  if(k === 'del'){ passcode = passcode.slice(0,-1); updateDots(); return; }
-  if(passcode.length >= 6) return;
-  passcode += k;
-  updateDots();
-  if(passcode.length === 6) setTimeout(checkPass, 250);
-});
-
-function checkPass(){
-  if(passcode === CORRECT_PASS){
-    document.getElementById('lock').classList.add('unlocked');
-    document.getElementById('home').classList.add('show');
-    setTimeout(()=>showNotif('SISTEM','apakah kamu sudah siap?', 4500), 900);
-  } else {
-    const l = document.getElementById('lock');
-    l.classList.add('shake');
-    setTimeout(()=>{ l.classList.remove('shake'); passcode=''; updateDots(); }, 450);
-  }
-}
-
-function showNotif(title, body, dur){
-  const n = document.getElementById('notif');
-  n.querySelector('.n-title').textContent = title;
-  n.querySelector('.n-body').textContent = body;
-  n.classList.add('show');
-  setTimeout(()=>n.classList.remove('show'), dur);
-}
-
-/* =========================================================
-   CLOCK
-   ========================================================= */
-function updateClock(){
-  const now = new Date();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mm = String(now.getMinutes()).padStart(2,'0');
-  const clock = hh+':'+mm;
-  document.getElementById('lockClock').textContent = clock;
-  document.getElementById('statusTime').textContent = clock;
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('lockDate').textContent = days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate();
-  document.getElementById('calIcon').textContent = now.getDate();
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-/* =========================================================
-   APP STATIS
-   ========================================================= */
-const APP_DATA = {
-  notes: { title:"Notes", html:`
-    <div class="section-label">Today</div>
-    <div class="note-item"><div class="n-top">survival log <span>23:58</span></div><div class="n-snip">kalau aku gak selamat, tolong cari tahu siapa pembunuh di antara kami.</div><div class="n-date">Notes</div></div>
-    <div class="note-item"><div class="n-top">jangan tidur <span>03:12</span></div><div class="n-snip">ada yang berjalan di luar tenda. aku dengar langkah kaki.</div><div class="n-date">Notes</div></div>
-    <div class="note-item"><div class="n-top">ruam <span>14/11/2025</span></div><div class="n-snip">pada hari ini, telah tumbuh sebuah awal pada ujung terakhir.</div><div class="n-date">Notes</div></div>
-  `},
-  photos: { title:"Photos", html:`
-    <div class="photo-grid">
-      <div class="photo p1"></div><div class="photo p2"></div><div class="photo p3"></div>
-      <div class="photo p4"></div><div class="photo p5"></div><div class="photo p6"></div>
-      <div class="photo p7"></div><div class="photo p8"></div><div class="photo p9"></div>
-    </div>
-  `},
-  calendar: { title:"Calendar", html:`
-    <div style="font-size:22px;font-weight:700;margin-bottom:4px;">October 2026</div>
-    <div style="font-size:12px;color:var(--dim);">S M T W T F S</div>
-    <div class="cal-grid">${[...Array(31)].map((_,i)=>{
-      const d=i+1, isToday = d===28;
-      return `<div class="cd ${isToday?'today':''}">${d}</div>`;
-    }).join('')}</div>
-    <div class="cal-event"><div class="ce-t">Survival</div><div class="ce-s">21.00 · Lokasi tidak diketahui</div></div>
-  `},
-  maps: { title:"Maps", html:`
-    <div class="safari-bar"><span>🔍</span><input placeholder="Search Maps" readonly></div>
-    <div class="section-label">Recents</div>
-    <div class="note-item"><div class="n-top">Hutan Terkutuk</div><div class="n-snip">Lokasi tidak diketahui</div></div>
-    <div style="margin-top:20px;height:180px;border-radius:14px;background:linear-gradient(135deg,#0a2a1a,#0a0a0a);display:flex;align-items:center;justify-content:center;font-size:40px;">📍</div>
-  `},
-  files: { title:"Files", html:`
-    <div class="note-item"><div class="n-top">📄 case_file.pdf</div><div class="n-snip">17 Aug · SISTEM</div></div>
-    <div class="note-item"><div class="n-top">📁 Dump</div><div class="n-snip">37 items</div></div>
-  `},
-  gmail: { title:"Gmail", html:`
-    <div class="section-label">Primary</div>
-    <div class="note-item"><div class="n-top">SISTEM <span>21:05</span></div><div class="n-snip">aku tahu kamu di mana. jangan bergerak.</div></div>
-    <div class="note-item"><div class="n-top">GB <span>20:30</span></div><div class="n-snip">kita harus ngomong. sekarang.</div></div>
-  `},
-  call: { title:"Phone", html:`
-    <div class="call-screen">
-      <div class="call-avatar"><img src="${PROFILE.sistem.avatar}" alt=""></div>
-      <div class="call-name">SISTEM</div>
-      <div class="call-status" id="callStatus">FaceTime Video…</div>
-      <div class="call-actions">
-        <div class="call-btn call-decline" onclick="declineCall()">📵</div>
-        <div class="call-btn call-accept" onclick="acceptCall()">📞</div>
-      </div>
-      <div style="margin-top:40px;font-size:12px;color:var(--dim);line-height:1.7;padding:0 20px;">
-        Panggilan masuk dari SISTEM.<br><span style="color:var(--red);">Jangan dijawab jika tidak yakin.</span>
-      </div>
-    </div>
-  `},
-  safari: { title:"Safari", html:`
-    <div class="safari-bar"><span>🔒</span><input value="unknown.rinai.workers.dev" readonly></div>
-    <div class="glitch-title">UNKNOWN</div>
-    <div class="horror-text">
-      <p>tolong sertakan credit <b style="color:#fff;">@midtales</b> dari x jika ingin share au ini.</p>
-      <p class="warn">⚠ 5 checkpoint tersedia di aplikasi safari.</p>
-    </div>
-  `},
-  weather: { title:"Weather", html:`
-    <div style="text-align:center;padding-top:10px;">
-      <div style="font-size:20px;font-weight:600;">Jakarta</div>
-      <div style="font-size:72px;font-weight:200;letter-spacing:-3px;">23°</div>
-      <div style="font-size:15px;color:var(--dim);">Clear</div>
-    </div>
-  `},
-  camera: { title:"Camera", html:`
-    <div style="aspect-ratio:3/4;border-radius:20px;background:linear-gradient(180deg,#0a0a0a,#1a0a0a);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background-image:url('${EXTRA_IMG}');background-size:cover;background-position:center;">
-      <div style="position:absolute;inset:0;background:rgba(0,0,0,.5);"></div>
-      <div style="position:absolute;bottom:20px;font-size:12px;color:#fff;letter-spacing:2px;z-index:1;">NO SIGNAL</div>
-    </div>
-  `},
-  settings: { title:"Settings", html:`
-    <div class="note-item"><div class="n-top">👤 Survivor</div><div class="n-snip">Apple Account, iCloud</div></div>
-    <div class="note-item"><div class="n-top">📶 Wi-Fi</div><div class="n-snip">Connected to "UNKNOWN"</div></div>
-    <div class="note-item"><div class="n-top">📱 General</div><div class="n-snip">Version 21.05</div></div>
-  `}
-};
-
-/* =========================================================
-   CHAT ENGINE
-   ========================================================= */
-let chatStory = null;
-let currentOutfits = null;
-
-function openApp(name){
-  const avTitle = document.getElementById('avTitle');
-  const avBody = document.getElementById('avBody');
-  const appview = document.getElementById('appview');
-
-  if(name === 'messages'){
-    if(!currentStoryId){
-      avTitle.textContent = "Messages";
-      avBody.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--dim);font-size:14px;">Pilih alur dulu di menu awal untuk membuka chat.</div>`;
-    } else {
-      buildChatUI(avTitle, avBody, currentStoryId);
-    }
-  } else {
-    const data = APP_DATA[name];
-    if(!data) return;
-    avTitle.textContent = data.title;
-    avBody.innerHTML = data.html;
-  }
-  appview.classList.add('open');
-  document.getElementById('overlay').classList.add('show');
-  if(name === 'messages'){
-    const b = document.getElementById('msgBadge');
-    if(b) b.style.display = 'none';
-  }
-}
-
-function closeApp(){
-  document.getElementById('appview').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
-}
-
-function buildChatUI(titleEl, bodyEl, storyId){
-  titleEl.textContent = "Messages";
-  chatStory = CHAT_STORIES[storyId] || CHAT_STORIES.forest;
-  currentOutfits = OUTFITS[storyId] || OUTFITS.forest;
-
-  bodyEl.innerHTML = `
-    <div style="margin:-18px -20px 0;display:flex;flex-direction:column;height:calc(100% + 58px);">
-      <div class="chat-header">
-        <div class="chat-avatar"><img src="${PROFILE.sistem.avatar}" alt=""></div>
-        <div class="ch-info">
-          <div class="ch-name">SISTEM <span class="verified">✔ VERIFIED</span></div>
-          <div class="ch-status online" id="chatStatus">online · mengawasi</div>
-        </div>
-        <div style="font-size:20px;color:var(--accent);">ℹ️</div>
-      </div>
-      <div class="chat-body" id="chatBody"></div>
-      <div class="chat-input-area" id="chatInputArea">
-        <textarea id="chatInput" rows="1" placeholder="iMessage"></textarea>
-        <button class="send-btn" id="sendBtn" disabled>➤</button>
-      </div>
-    </div>
-  `;
-
-  const chatBody = document.getElementById('chatBody');
-  const input = document.getElementById('chatInput');
-  const sendBtn = document.getElementById('sendBtn');
-
-  input.addEventListener('input', ()=>{
-    input.style.height = 'auto';
-    input.style.height = Math.min(input.scrollHeight, 100) + 'px';
-    sendBtn.disabled = input.value.trim().length === 0;
-  });
-  input.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter' && !e.shiftKey){
-      e.preventDefault();
-      if(input.value.trim()) sendUserMessage();
-    }
-  });
-  sendBtn.addEventListener('click', sendUserMessage);
-
-  function sendUserMessage(){
-    const txt = input.value.trim();
-    if(!txt) return;
-    appendBubble('me', txt);
-    input.value = '';
-    input.style.height = 'auto';
-    sendBtn.disabled = true;
-    chatBody.scrollTop = chatBody.scrollHeight;
-  }
-
-  runNode(chatStory, 'start', chatBody);
-}
-
-function renderCast(castList){
-  if(!castList || !castList.length) return '';
-  const html = castList.map(id => {
-    const c = CAST[id];
-    if(!c) return '';
-    const outfit = currentOutfits && currentOutfits[id] ? currentOutfits[id].outfit : '👕';
-    return `
-      <div class="cast-item">
-        <div class="cast-face">${c.emoji}<div class="outfit">${outfit}</div></div>
-        <div class="cast-label">${c.name}</div>
-      </div>
-    `;
-  }).join('');
-  return `<div class="scene-cast">${html}</div>`;
-}
-
-function appendBubble(from, text, opts={}){
-  const body = document.getElementById('chatBody');
-  if(!body) return;
-
-  const row = document.createElement('div');
-  row.className = 'msg-row';
-  if(from === 'me') row.classList.add('me');
-  if(from === 'sys') row.classList.add('sys');
-  if(from === 'gb') row.classList.add('gb');
-
-  const b = document.createElement('div');
-  b.className = 'bubble';
-
-  if(from === 'sys'){
-    b.innerHTML = `<div class="sys-tag">SISTEM ✔</div>${text.replace(/\n/g,'<br>')}`;
-  } else if(from === 'gb' && opts.sender && CAST[opts.sender]){
-    const senderName = CAST[opts.sender].name;
-    b.innerHTML = `<div class="gb-sender">${senderName}</div>${text}`;
-  } else {
-    b.textContent = text;
-  }
-
-  row.appendChild(b);
-  body.appendChild(row);
-  body.scrollTop = body.scrollHeight;
-}
-
-function appendImage(url, caption){
-  const body = document.getElementById('chatBody');
-  if(!body) return;
-  const el = document.createElement('div');
-  el.className = 'msg-image';
-  el.innerHTML = `
-    <div class="img-badge">📷 GB</div>
-    <img src="${url}" alt="scene" onerror="this.style.display='none';this.parentElement.querySelector('.img-badge').textContent='⚠ gambar gagal dimuat';">
-    <div class="img-caption">${caption || ''}</div>
-  `;
-  body.appendChild(el);
-  body.scrollTop = body.scrollHeight;
-}
-
-function appendCast(castList){
-  const body = document.getElementById('chatBody');
-  if(!body) return;
-  const html = renderCast(castList);
-  if(!html) return;
-  const el = document.createElement('div');
-  el.innerHTML = html;
-  body.appendChild(el.firstElementChild);
-  body.scrollTop = body.scrollHeight;
-}
-
-function showTyping(){
-  const body = document.getElementById('chatBody');
-  if(!body) return;
-  const t = document.createElement('div');
-  t.className = 'typing-indicator';
-  t.id = 'typingInd';
-  t.innerHTML = '<span></span><span></span><span></span>';
-  body.appendChild(t);
-  body.scrollTop = body.scrollHeight;
-}
-
-function hideTyping(){
-  const t = document.getElementById('typingInd');
-  if(t) t.remove();
-}
-
-function renderChoices(choices){
-  const body = document.getElementById('chatBody');
-  if(!body) return;
-  const old = body.querySelector('.choices');
-  if(old) old.remove();
-
-  const wrap = document.createElement('div');
-  wrap.className = 'choices';
-  choices.forEach(c => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn' + (c.danger ? ' danger' : '');
-    btn.textContent = c.label;
-    btn.onclick = ()=>{
-      wrap.remove();
-      appendBubble('me', c.label);
-      runNode(chatStory, c.next, body);
-    };
-    wrap.appendChild(btn);
-  });
-  body.appendChild(wrap);
-  body.scrollTop = body.scrollHeight;
-}
-
-/* ===== TAMPILKAN ENDING CARD ===== */
-function showEnding(ending){
-  const body = document.getElementById('chatBody');
-  if(!body) return;
-  const config = ENDINGS[ending.type] || ENDINGS.usual;
-  const el = document.createElement('div');
-  el.className = 'ending-card ' + config.color;
-  el.innerHTML = `
-    <div class="end-label">${config.label}</div>
-    <div class="end-icon">${config.icon}</div>
-    <div class="end-title">${ending.title || '—'}</div>
-    <div class="end-desc">${ending.desc || ''}</div>
-    <div class="end-stars">${config.stars}</div>
-    <div class="end-flag">${config.label}</div>
-  `;
-  body.appendChild(el);
-  body.scrollTop = body.scrollHeight;
-
-  const area = document.getElementById('chatInputArea');
-  if(area){
-    area.innerHTML = `
-      <div style="width:100%;text-align:center;font-size:12px;color:var(--dim);padding:8px;">
-        — ${config.label} —
-        <div style="margin-top:8px;font-size:11px;color:#6cb6ff;cursor:pointer;" onclick="restartStory()">🔄 Main ulang alur ini</div>
-      </div>
-    `;
-  }
-}
-
-function restartStory(){
-  if(!currentStoryId) return;
-  const avTitle = document.getElementById('avTitle');
-  const avBody = document.getElementById('avBody');
-  buildChatUI(avTitle, avBody, currentStoryId);
-}
-
-function runNode(story, nodeId, body){
-  const node = story[nodeId];
-  if(!node) return;
-
-  const from = node.from;
-  const opts = { sender: node.sender };
-
-  if(node.cast && node.cast.length){
-    appendCast(node.cast);
-  }
-
-  if(from === 'me'){
-    appendBubble('me', node.text);
-    afterBubble();
-  } else if(from === 'sys'){
-    appendBubble('sys', node.text);
-    afterBubble();
-  } else {
-    showTyping();
-    setTimeout(()=>{
-      hideTyping();
-      appendBubble(from, node.text, opts);
-      if(node.image){
-        setTimeout(()=>{
-          appendImage(node.image, node.imageCaption);
-          setTimeout(afterBubble, 700);
-        }, 400);
-      } else {
-        afterBubble();
-      }
-    }, 700 + Math.random()*500);
-  }
-
-  function afterBubble(){
-    if(node.ending){
-      showEnding(node.ending);
-    } else if(node.choices){
-      renderChoices(node.choices);
-    } else if(node.autoNext){
-      setTimeout(()=>runNode(story, node.autoNext, body), node.delay || 1200);
-    }
-  }
-}
-
-/* =========================================================
-   CALL
-   ========================================================= */
-let callTimer = null;
-function declineCall(){
-  const s = document.getElementById('callStatus');
-  if(!s) return;
-  s.textContent = 'Declined';
-  s.style.color = 'var(--red)';
-  setTimeout(closeApp, 1200);
-}
-function acceptCall(){
-  const s = document.getElementById('callStatus');
-  if(!s) return;
-  s.textContent = 'Connected · 00:00';
-  s.style.color = 'var(--green)';
-  let sec = 0;
-  if(callTimer) clearInterval(callTimer);
-  callTimer = setInterval(()=>{
-    const av = document.getElementById('appview');
-    if(!av || !av.classList.contains('open')){ clearInterval(callTimer); callTimer=null; return; }
-    sec++;
-    s.textContent = 'Connected · ' + String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0');
-  }, 1000);
-}
-
-/* =========================================================
-   INIT
-   ========================================================= */
-renderStoryMenu();
 </script>
 </body>
 </html>
