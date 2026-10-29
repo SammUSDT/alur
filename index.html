@@ -370,9 +370,6 @@
 </div>
 
 <script>
-/* =========================================================
-   PROFIL & CONST
-   ========================================================= */
 const PROFILE = {
   sistem: { name:'SISTEM', avatar:'https://files.catbox.moe/rbu6wo.jpg' },
   gb:     { name:'GB',     avatar:'https://files.catbox.moe/6lzyht.jpg' }
@@ -403,204 +400,374 @@ const STORIES = [
 ];
 
 /* =========================================================
-   CHAT STORIES — LONG, banyak rintangan, GOOD ENDING
+   CHAT STORIES — trigger-based (butuh tekan send)
    =========================================================
-   Setiap alur = { sistem: {...}, gb: {...} }
-   Node: { from, sender, text, cast, image, imageCaption, autoNext, delay, ending, end }
+   Format:
+   - Setiap node punya text/from/sender/cast/image
+   - autoNext = node berikutnya (dipicu setelah player tekan send)
+   - trigger = true artinya node ini menunggu player tekan send
    ========================================================= */
 const CHAT_STORIES = {
 
-/* =========================================================
-   ALUR 1: HUTAN TERKUTUK — 12 RINTANGAN
-   ========================================================= */
+/* ============ ALUR 1: HUTAN ============ */
 forest: {
   sistem: {
     start:{
       from:'sys',
-      text:'[SISTEM] Alur 1: HUTAN TERKUTUK\n\nSelamat datang, manusia. Aku bukan manusia. Aku pengawas.\n\nKamu dan 7 temanmu terjebak di hutan. 2 pembunuh di antara kalian.\n\nAku akan memberimu petunjuk di sini. Teman-temanmu di GB.\n\nRintanganmu panjang. Siap?',
-      autoNext:'s2', delay:2200
+      text:'[SISTEM] Alur 1: HUTAN TERKUTUK\n\nAku bukan manusia. Aku pengawas.\n\nKamu dan 7 temanmu terjebak di hutan. 2 pembunuh di antara kalian.\n\n12 rintangan menanti. Ketik apa saja lalu tekan ➤ untuk memulai.',
+      trigger:true,
+      autoNext:'s2'
     },
     s2:{
       from:'sys',
-      text:'[SISTEM] PETUNJUK #1 — RINTANGAN 1/12\n\nBau darah terdeteksi di belakang tenda. Waktu 30 menit sebelum hujan turun. Kamu harus bergerak cepat.\n\nBuka GB.',
+      text:'[SISTEM] PETUNJUK #1 — RINTANGAN 1/12\n\nBau darah di belakang tenda. Waktu 30 menit sebelum hujan.\n\nBuka GB. Tekan ➤ setelah membaca.',
+      trigger:true,
+      autoNext:'s3'
+    },
+    s3:{
+      from:'sys',
+      text:'[SISTEM] Aku akan menunggumu di sini. Selesaikan rintanganmu di GB.',
       end:true
     }
   },
   gb: {
-    start:{ from:'sys', text:'[SISTEM] GB dibuka.', autoNext:'f1', delay:800 },
-    f1:{ from:'gb', sender:'ari', text:'kalian masih bangun? aku gak bisa tidur', cast:['kamu','ari','dita','bima'], autoNext:'f2', delay:1200 },
-    f2:{ from:'gb', sender:'dita', text:'2 hari terjebak. signal hilang. hujan sebentar lagi', cast:['kamu','ari','dita','bima'], autoNext:'f3', delay:1200 },
-    f3:{ from:'gb', sender:'bima', text:'aku nemu baju berdarah di belakang tenda', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: baju berdarah', cast:['kamu','ari','dita','bima'], autoNext:'f4', delay:1400 },
-    f4:{ from:'sys', text:'[SISTEM] RINTANGAN 1/12: Kamu harus periksa lokasi dalam 10 menit sebelum hujan menghapus jejak.', autoNext:'f5', delay:1400 },
-    f5:{ from:'me', text:'aku ke sana sekarang.', autoNext:'f6', delay:800 },
-    f6:{ from:'gb', sender:'ari', text:'aku ikut. jangan sendirian', cast:['kamu','ari'], autoNext:'f7', delay:1000 },
-    f7:{ from:'sys', text:'[SISTEM] Kamu menemukan jejak darah. Hujan mulai turun. Jejak hampir hilang.\n\nRINTANGAN 2/12: Ikuti jejak sebelum hujan menghapusnya.', autoNext:'f8', delay:1600 },
-    f8:{ from:'me', text:'cepat, sebelum hilang!', autoNext:'f9', delay:800 },
-    f9:{ from:'gb', sender:'ari', text:'ada tubuh... Rio. luka leher. rapi.', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: tubuh Rio di tepi sungai', cast:['kamu','ari'], autoNext:'f10', delay:1600 },
-    f10:{ from:'sys', text:'[SISTEM] RINTANGAN 3/12: Kamu harus beri tahu semua orang sebelum pembunuh menghilangkan bukti.\n\nPilih: beri tahu semua / simpan rahasia. Kamu harus memutuskan.', autoNext:'f11', delay:1700 },
-    f11:{ from:'me', text:'kita kumpulkan semua. sekarang.', autoNext:'f12', delay:800 },
-    f12:{ from:'sys', text:'[SISTEM] RINTANGAN 4/12: Semua panik. Lampu senter mati. Ada yang berlari. Saat lampu nyala, Dita hilang.\n\nKamu harus tenangkan mereka sebelum ada korban lain.', autoNext:'f13', delay:1800 },
-    f13:{ from:'gb', sender:'bima', text:'kita harus tenang! aku lihat seseorang ke arah sungai', cast:['kamu','ari','bima','sinta'], autoNext:'f14', delay:1400 },
-    f14:{ from:'me', text:'aku ke sungai. kalian jaga camp.', autoNext:'f15', delay:800 },
-    f15:{ from:'sys', text:'[SISTEM] RINTANGAN 5/12: Kamu menemukan Dita di tepi sungai. Dia masih hidup. Tapi ada seseorang di balik pohon.', autoNext:'f16', delay:1600 },
-    f16:{ from:'gb', sender:'ari', text:'aku lihat bayangan! di balik pohon besar!', cast:['kamu','ari'], autoNext:'f17', delay:1300 },
-    f17:{ from:'me', text:'jangan bergerak. aku dekati.', autoNext:'f18', delay:800 },
-    f18:{ from:'sys', text:'[SISTEM] RINTANGAN 6/12: Kamu berhasil selamatkan Dita. Tapi pembunuh kabur. Kamu temukan peta di tanah — mengarah ke goa di balik air terjun.\n\nWaktu 2 jam sebelum air pasang menutup goa.', autoNext:'f19', delay:1800 },
-    f19:{ from:'gb', sender:'dita', text:'aku ikut. aku tau goa itu.', cast:['kamu','ari','dita'], autoNext:'f20', delay:1300 },
-    f20:{ from:'sys', text:'[SISTEM] RINTANGAN 7/12: Perjalanan ke goa. Hujan deras. Tanah licin. Kamu harus pilih jalan: tebing curam atau sungai deras.', autoNext:'f21', delay:1600 },
-    f21:{ from:'me', text:'kita lewat tebing. lebih cepat.', autoNext:'f22', delay:800 },
-    f22:{ from:'sys', text:'[SISTEM] RINTANGAN 8/12: Di tengah tebing, Dita terpeleset. Kamu harus menyelamatkannya tanpa jatuh sendiri.', autoNext:'f23', delay:1700 },
-    f23:{ from:'me', text:'pegang tanganku! jangan lepas!', autoNext:'f24', delay:800 },
-    f24:{ from:'gb', sender:'ari', text:'aku pegang dari atas! cepat!', cast:['kamu','ari','dita'], autoNext:'f25', delay:1200 },
-    f25:{ from:'sys', text:'[SISTEM] RINTANGAN 9/12: Kalian sampai di goa. Air mulai naik. Kalian harus masuk sebelum goa tertutup air.', autoNext:'f26', delay:1600 },
-    f26:{ from:'me', text:'masuk! sekarang!', autoNext:'f27', delay:700 },
-    f27:{ from:'sys', text:'[SISTEM] Di dalam goa: mayat Rio. Baru dibunuh. Berarti yang di sungai bukan Rio. Ada lebih dari 2 pembunuh.\n\nRINTANGAN 10/12: Kamu temukan buku catatan. Nama semua korban. Nama pembunuh. Kamu harus bawa bukti ini keluar.', autoNext:'f28', delay:1900 },
-    f28:{ from:'gb', sender:'ari', text:'ada suara dari luar goa! mereka tau kita di sini!', cast:['kamu','ari','dita'], autoNext:'f29', delay:1300 },
-    f29:{ from:'sys', text:'[SISTEM] RINTANGAN 11/12: Pembunuh mengejar. Kamu harus lari lewat jalur air. Air deras. Ada jeram.', autoNext:'f30', delay:1600 },
-    f30:{ from:'me', text:'lompat! sekarang!', autoNext:'f31', delay:800 },
-    f31:{ from:'sys', text:'[SISTEM] Kalian terjun ke sungai. Arus deras. Berhasil sampai hilir. Pembunuh tidak mengikuti.\n\nRINTANGAN 12/12: Kalian harus sampai ke pos polisi sebelum pembunuh menghilangkan bukti.', autoNext:'f32', delay:1800 },
-    f32:{ from:'gb', sender:'ari', text:'pos polisi 3 km dari sini. kita harus cepat', cast:['kamu','ari','dita'], autoNext:'f33', delay:1300 },
-    f33:{ from:'me', text:'kita jalan. sekarang. bawa semua bukti.', autoNext:'f34', delay:800 },
-    f34:{ from:'sys', text:'[SISTEM] Kalian sampai di pos polisi. Bukti diserahkan. Pembunuh tertangkap 2 jam kemudian. Dita, Bima, Sinta, Ari, Naya selamat.\n\nGood Ending terungkap.', ending:{ type:'good', title:'Rintangan Terlewati', desc:'Kamu melewati 12 rintangan berat. Bukti diserahkan. Pembunuh tertangkap. Semua selamat. Hutan tidak lagi menyimpan rahasia.' } }
+    start:{
+      from:'sys',
+      text:'[SISTEM] GB dibuka. Rintangan 1/12 menantimu.',
+      trigger:true,
+      autoNext:'f1'
+    },
+    f1:{
+      from:'gb', sender:'ari',
+      text:'kalian masih bangun? aku gak bisa tidur',
+      cast:['kamu','ari','dita','bima'],
+      trigger:true, autoNext:'f2'
+    },
+    f2:{
+      from:'gb', sender:'dita',
+      text:'2 hari terjebak. signal hilang. hujan sebentar lagi',
+      cast:['kamu','ari','dita','bima'],
+      trigger:true, autoNext:'f3'
+    },
+    f3:{
+      from:'gb', sender:'bima',
+      text:'aku nemu baju berdarah di belakang tenda',
+      image:'https://files.catbox.moe/6lzyht.jpg',
+      imageCaption:'<b>GB</b>: baju berdarah',
+      cast:['kamu','ari','dita','bima'],
+      trigger:true, autoNext:'f4'
+    },
+    f4:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 1/12: Kamu harus periksa lokasi dalam 10 menit sebelum hujan menghapus jejak.',
+      trigger:true, autoNext:'f5'
+    },
+    f5:{
+      from:'me', text:'aku ke sana sekarang.',
+      trigger:true, autoNext:'f6'
+    },
+    f6:{
+      from:'gb', sender:'ari',
+      text:'aku ikut. jangan sendirian',
+      cast:['kamu','ari'],
+      trigger:true, autoNext:'f7'
+    },
+    f7:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 2/12: Jejak darah hampir hilang. Ikuti sebelum hujan menghapusnya.',
+      trigger:true, autoNext:'f8'
+    },
+    f8:{
+      from:'me', text:'cepat, sebelum hilang!',
+      trigger:true, autoNext:'f9'
+    },
+    f9:{
+      from:'gb', sender:'ari',
+      text:'ada tubuh... Rio. luka leher. rapi.',
+      image:'https://files.catbox.moe/6lzyht.jpg',
+      imageCaption:'<b>GB</b>: tubuh Rio di tepi sungai',
+      cast:['kamu','ari'],
+      trigger:true, autoNext:'f10'
+    },
+    f10:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 3/12: Kamu harus beri tahu semua orang sebelum pembunuh menghilangkan bukti.',
+      trigger:true, autoNext:'f11'
+    },
+    f11:{
+      from:'me', text:'kita kumpulkan semua. sekarang.',
+      trigger:true, autoNext:'f12'
+    },
+    f12:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 4/12: Semua panik. Lampu senter mati. Saat nyala, Dita hilang.\n\nTenangkan mereka.',
+      trigger:true, autoNext:'f13'
+    },
+    f13:{
+      from:'gb', sender:'bima',
+      text:'kita harus tenang! aku lihat seseorang ke arah sungai',
+      cast:['kamu','ari','bima','sinta'],
+      trigger:true, autoNext:'f14'
+    },
+    f14:{
+      from:'me', text:'aku ke sungai. kalian jaga camp.',
+      trigger:true, autoNext:'f15'
+    },
+    f15:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 5/12: Dita ditemukan di tepi sungai. Masih hidup. Tapi ada seseorang di balik pohon.',
+      trigger:true, autoNext:'f16'
+    },
+    f16:{
+      from:'gb', sender:'ari',
+      text:'aku lihat bayangan! di balik pohon besar!',
+      cast:['kamu','ari'],
+      trigger:true, autoNext:'f17'
+    },
+    f17:{
+      from:'me', text:'jangan bergerak. aku dekati.',
+      trigger:true, autoNext:'f18'
+    },
+    f18:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 6/12: Dita selamat. Pembunuh kabur. Ada peta di tanah — mengarah ke goa di balik air terjun. Waktu 2 jam sebelum air pasang.',
+      trigger:true, autoNext:'f19'
+    },
+    f19:{
+      from:'gb', sender:'dita',
+      text:'aku ikut. aku tau goa itu.',
+      cast:['kamu','ari','dita'],
+      trigger:true, autoNext:'f20'
+    },
+    f20:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 7/12: Hujan deras. Tanah licin. Pilih jalan: tebing curam atau sungai deras.',
+      trigger:true, autoNext:'f21'
+    },
+    f21:{
+      from:'me', text:'kita lewat tebing. lebih cepat.',
+      trigger:true, autoNext:'f22'
+    },
+    f22:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 8/12: Di tengah tebing, Dita terpeleset. Selamatkan tanpa jatuh.',
+      trigger:true, autoNext:'f23'
+    },
+    f23:{
+      from:'me', text:'pegang tanganku! jangan lepas!',
+      trigger:true, autoNext:'f24'
+    },
+    f24:{
+      from:'gb', sender:'ari',
+      text:'aku pegang dari atas! cepat!',
+      cast:['kamu','ari','dita'],
+      trigger:true, autoNext:'f25'
+    },
+    f25:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 9/12: Sampai di goa. Air mulai naik. Masuk sebelum goa tertutup.',
+      trigger:true, autoNext:'f26'
+    },
+    f26:{
+      from:'me', text:'masuk! sekarang!',
+      trigger:true, autoNext:'f27'
+    },
+    f27:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 10/12: Di dalam: mayat Rio baru. Ada lebih dari 2 pembunuh. Ada buku catatan. Bawa bukti ini keluar.',
+      trigger:true, autoNext:'f28'
+    },
+    f28:{
+      from:'gb', sender:'ari',
+      text:'ada suara dari luar goa! mereka tau kita di sini!',
+      cast:['kamu','ari','dita'],
+      trigger:true, autoNext:'f29'
+    },
+    f29:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 11/12: Pembunuh mengejar. Lari lewat jalur air. Ada jeram.',
+      trigger:true, autoNext:'f30'
+    },
+    f30:{
+      from:'me', text:'lompat! sekarang!',
+      trigger:true, autoNext:'f31'
+    },
+    f31:{
+      from:'sys',
+      text:'[SISTEM] RINTANGAN 12/12: Sampai hilir. Pembunuh tidak mengikuti. Harus sampai pos polisi sebelum pembunuh hilangkan bukti.',
+      trigger:true, autoNext:'f32'
+    },
+    f32:{
+      from:'gb', sender:'ari',
+      text:'pos polisi 3 km dari sini. kita harus cepat',
+      cast:['kamu','ari','dita'],
+      trigger:true, autoNext:'f33'
+    },
+    f33:{
+      from:'me', text:'kita jalan. sekarang. bawa semua bukti.',
+      trigger:true, autoNext:'f34'
+    },
+    f34:{
+      from:'sys',
+      text:'[SISTEM] Kalian sampai pos polisi. Bukti diserahkan. Pembunuh tertangkap 2 jam kemudian. Dita, Bima, Sinta, Ari, Naya selamat.',
+      trigger:true, autoNext:'f35'
+    },
+    f35:{
+      from:'sys',
+      text:'',
+      ending:{ type:'good', title:'Rintangan Terlewati', desc:'Kamu melewati 12 rintangan berat. Bukti diserahkan. Pembunuh tertangkap. Semua selamat.' }
+    }
   }
 },
 
-/* =========================================================
-   ALUR 2: ZOMBIE OUTBREAK — 10 RINTANGAN
-   ========================================================= */
+/* ============ ALUR 2: ZOMBIE ============ */
 zombie: {
   sistem: {
     start:{
       from:'sys',
-      text:'[SISTEM] Alur 2: ZOMBIE OUTBREAK\n\nDunia hancur. Tersisa kamu dan 4 temanmu. Persediaan 3 hari.\n\nAku bukan manusia. Aku pengawas.\n\nRintanganmu berat. 10 rintangan menanti. Siap?',
-      autoNext:'s2', delay:2200
+      text:'[SISTEM] Alur 2: ZOMBIE OUTBREAK\n\nDunia hancur. Tersisa kamu dan 4 temanmu. Persediaan 3 hari.\n\n10 rintangan menanti. Ketik apa saja lalu tekan ➤ untuk memulai.',
+      trigger:true, autoNext:'s2'
     },
     s2:{
       from:'sys',
-      text:'[SISTEM] PETUNJUK #1 — RINTANGAN 1/10\n\nAri digigit 6 jam lalu. Belum berubah. Tapi waktu terus berjalan.\n\nBuka GB. Teman-temanmu menunggumu.',
+      text:'[SISTEM] PETUNJUK #1 — RINTANGAN 1/10\n\nAri digigit 6 jam lalu. Belum berubah. Waktu terus berjalan.\n\nBuka GB.',
+      trigger:true, autoNext:'s3'
+    },
+    s3:{
+      from:'sys',
+      text:'[SISTEM] Aku akan menunggumu di sini.',
       end:true
     }
   },
   gb: {
-    start:{ from:'sys', text:'[SISTEM] GB dibuka.', autoNext:'z1', delay:800 },
-    z1:{ from:'gb', sender:'ari', text:'kamu masih hidup? syukurlah', cast:['kamu','ari','dita','bima','sinta'], autoNext:'z2', delay:1200 },
-    z2:{ from:'gb', sender:'dita', text:'kota hancur. cuma kita berlima yang tersisa', cast:['kamu','ari','dita','bima','sinta'], autoNext:'z3', delay:1200 },
-    z3:{ from:'gb', sender:'bima', text:'Ari digigit. belum berubah. kita gak tau kapan', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: luka gigitan Ari', cast:['kamu','ari','dita','bima','sinta'], autoNext:'z4', delay:1400 },
-    z4:{ from:'sys', text:'[SISTEM] RINTANGAN 1/10: Ari demam. Persediaan menipis. Kamu harus pilih: keluarkan, pantau, atau cari obat.\n\nTapi kamu harus memutuskan sekarang.', autoNext:'z5', delay:1700 },
-    z5:{ from:'me', text:'kita cari obat. ada RS 5 km dari sini.', autoNext:'z6', delay:800 },
-    z6:{ from:'sys', text:'[SISTEM] RINTANGAN 2/10: Perjalanan ke RS. Jalan penuh zombie. Kalian harus lewat gang sempit atau jalan utama.', autoNext:'z7', delay:1600 },
-    z7:{ from:'me', text:'lewat gang. lebih aman.', autoNext:'z8', delay:800 },
-    z8:{ from:'sys', text:'[SISTEM] RINTANGAN 3/10: Di tengah gang, ada 3 zombie. Kalian harus lewat tanpa suara.\n\nAri demam, hampir bersin.', autoNext:'z9', delay:1700 },
-    z9:{ from:'gb', sender:'ari', text:'(menahan bersin) aku... gak bisa...', cast:['kamu','ari','dita','bima'], autoNext:'z10', delay:1300 },
-    z10:{ from:'me', text:'tahan. sedikit lagi.', autoNext:'z11', delay:800 },
-    z11:{ from:'sys', text:'[SISTEM] RINTANGAN 4/10: Kalian lolos. Sampai di RS. Ada survivor lain. Ia punya obat. Minta imbalan.\n\nIa kanibal. Kalian harus putuskan: tolak, rampas, atau korbankan.', autoNext:'z12', delay:1800 },
-    z12:{ from:'me', text:'kita rampas. jangan korbankan siapa-siapa.', autoNext:'z13', delay:800 },
-    z13:{ from:'sys', text:'[SISTEM] RINTANGAN 5/10: Kalian serang kanibal. Ia kabur. Obat didapat. Tapi ia membawa teman-temannya.\n\nKalian harus lari sebelum mereka kembali.', autoNext:'z14', delay:1700 },
-    z14:{ from:'gb', sender:'bima', text:'10 zombie di depan RS! mereka datang!', cast:['kamu','ari','dita','bima','sinta'], autoNext:'z15', delay:1300 },
-    z15:{ from:'me', text:'lewat atap! sekarang!', autoNext:'z16', delay:800 },
-    z16:{ from:'sys', text:'[SISTEM] RINTANGAN 6/10: Di atap, Ari mulai berubah. Matanya memutih. Kamu harus putuskan: bunuh atau cari cara lain.', autoNext:'z17', delay:1700 },
-    z17:{ from:'me', text:'ikat dia. aku punya ide.', autoNext:'z18', delay:800 },
-    z18:{ from:'sys', text:'[SISTEM] RINTANGAN 7/10: Kamu gunakan obat. Ari stabil. Tapi butuh waktu. Zombie di bawah mulai naik.\n\nKalian harus bertahan 30 menit.', autoNext:'z19', delay:1800 },
-    z19:{ from:'gb', sender:'dita', text:'pintu atap mau jebol! aku tahan!', cast:['kamu','ari','dita','bima','sinta'], autoNext:'z20', delay:1400 },
-    z20:{ from:'me', text:'tahan! aku siapkan jalan keluar!', autoNext:'z21', delay:800 },
-    z21:{ from:'sys', text:'[SISTEM] RINTANGAN 8/10: Ari pulih. Kalian temukan helikopter di atap gedung sebelah. Tapi ada 2 zombie di jalurnya.', autoNext:'z22', delay:1700 },
-    z22:{ from:'gb', sender:'sinta', text:'aku bisa alihkan mereka. percaya sama aku', cast:['kamu','ari','dita','bima','sinta'], autoNext:'z23', delay:1300 },
-    z23:{ from:'sys', text:'[SISTEM] RINTANGAN 9/10: Sinta berhasil alihkan zombie. Kalian sampai di helikopter. Tapi bahan bakar tinggal 10%.\n\nCukup untuk 1 jam. Kota ini butuh 45 menit untuk dilewati.', autoNext:'z24', delay:1800 },
-    z24:{ from:'me', text:'cukup. ayo naik!', autoNext:'z25', delay:800 },
-    z25:{ from:'sys', text:'[SISTEM] RINTANGAN 10/10: Helikopter lepas landas. Bahan bakar menipis. Kamu harus temukan tempat mendarat dalam 15 menit.\n\nAda bandara militer 20 km. Ada bukit 10 km.', autoNext:'z26', delay:1800 },
-    z26:{ from:'gb', sender:'ari', text:'bukit! ada signal darurat dari sana!', cast:['kamu','ari','dita','bima','sinta'], autoNext:'z27', delay:1300 },
-    z27:{ from:'me', text:'ke bukit! sekarang!', autoNext:'z28', delay:800 },
-    z28:{ from:'sys', text:'[SISTEM] Kalian mendarat di bukit. Tim penyelamat militer menunggu. Kalian semua selamat. Ari pulih total.\n\nGood Ending terungkap.', ending:{ type:'good', title:'Bertahan Sampai Akhir', desc:'Kamu melewati 10 rintangan berat. Semua temanmu selamat. Helikopter mendarat tepat waktu. Wabah zombie tidak mengalahkan kalian.' } }
+    start:{ from:'sys', text:'[SISTEM] GB dibuka. Rintangan 1/10 menantimu.', trigger:true, autoNext:'z1' },
+    z1:{ from:'gb', sender:'ari', text:'kamu masih hidup? syukurlah', cast:['kamu','ari','dita','bima','sinta'], trigger:true, autoNext:'z2' },
+    z2:{ from:'gb', sender:'dita', text:'kota hancur. cuma kita berlima yang tersisa', cast:['kamu','ari','dita','bima','sinta'], trigger:true, autoNext:'z3' },
+    z3:{ from:'gb', sender:'bima', text:'Ari digigit. belum berubah. kita gak tau kapan', image:'https://files.catbox.moe/6lzyht.jpg', imageCaption:'<b>GB</b>: luka gigitan Ari', cast:['kamu','ari','dita','bima','sinta'], trigger:true, autoNext:'z4' },
+    z4:{ from:'sys', text:'[SISTEM] RINTANGAN 1/10: Ari demam. Persediaan menipis. Cari obat sekarang.', trigger:true, autoNext:'z5' },
+    z5:{ from:'me', text:'kita cari obat. ada RS 5 km dari sini.', trigger:true, autoNext:'z6' },
+    z6:{ from:'sys', text:'[SISTEM] RINTANGAN 2/10: Jalan penuh zombie. Lewat gang sempit atau jalan utama.', trigger:true, autoNext:'z7' },
+    z7:{ from:'me', text:'lewat gang. lebih aman.', trigger:true, autoNext:'z8' },
+    z8:{ from:'sys', text:'[SISTEM] RINTANGAN 3/10: 3 zombie di gang. Lewat tanpa suara. Ari hampir bersin.', trigger:true, autoNext:'z9' },
+    z9:{ from:'gb', sender:'ari', text:'(menahan bersin) aku... gak bisa...', cast:['kamu','ari','dita','bima'], trigger:true, autoNext:'z10' },
+    z10:{ from:'me', text:'tahan. sedikit lagi.', trigger:true, autoNext:'z11' },
+    z11:{ from:'sys', text:'[SISTEM] RINTANGAN 4/10: Sampai di RS. Ada kanibal. Ia punya obat. Minta imbalan satu orang.', trigger:true, autoNext:'z12' },
+    z12:{ from:'me', text:'kita rampas. jangan korbankan siapa-siapa.', trigger:true, autoNext:'z13' },
+    z13:{ from:'sys', text:'[SISTEM] RINTANGAN 5/10: Kanibal kabur. Obat didapat. Tapi ia membawa teman-temannya.', trigger:true, autoNext:'z14' },
+    z14:{ from:'gb', sender:'bima', text:'10 zombie di depan RS! mereka datang!', cast:['kamu','ari','dita','bima','sinta'], trigger:true, autoNext:'z15' },
+    z15:{ from:'me', text:'lewat atap! sekarang!', trigger:true, autoNext:'z16' },
+    z16:{ from:'sys', text:'[SISTEM] RINTANGAN 6/10: Di atap, Ari mulai berubah. Matanya memutih. Kamu harus putuskan: bunuh atau cari cara lain.', trigger:true, autoNext:'z17' },
+    z17:{ from:'me', text:'ikat dia. aku punya ide.', trigger:true, autoNext:'z18' },
+    z18:{ from:'sys', text:'[SISTEM] RINTANGAN 7/10: Gunakan obat. Ari stabil. Zombie mulai naik. Bertahan 30 menit.', trigger:true, autoNext:'z19' },
+    z19:{ from:'gb', sender:'dita', text:'pintu atap mau jebol! aku tahan!', cast:['kamu','ari','dita','bima','sinta'], trigger:true, autoNext:'z20' },
+    z20:{ from:'me', text:'tahan! aku siapkan jalan keluar!', trigger:true, autoNext:'z21' },
+    z21:{ from:'sys', text:'[SISTEM] RINTANGAN 8/10: Ari pulih. Helikopter di gedung sebelah. Ada 2 zombie di jalurnya.', trigger:true, autoNext:'z22' },
+    z22:{ from:'gb', sender:'sinta', text:'aku bisa alihkan mereka. percaya sama aku', cast:['kamu','ari','dita','bima','sinta'], trigger:true, autoNext:'z23' },
+    z23:{ from:'sys', text:'[SISTEM] RINTANGAN 9/10: Sinta alihkan zombie. Kalian sampai helikopter. Bahan bakar 10% — cukup 1 jam. Kota butuh 45 menit.', trigger:true, autoNext:'z24' },
+    z24:{ from:'me', text:'cukup. ayo naik!', trigger:true, autoNext:'z25' },
+    z25:{ from:'sys', text:'[SISTEM] RINTANGAN 10/10: Lepas landas. Bahan bakar menipis. Cari tempat mendarat: bandara militer 20 km atau bukit 10 km.', trigger:true, autoNext:'z26' },
+    z26:{ from:'gb', sender:'ari', text:'bukit! ada signal darurat dari sana!', cast:['kamu','ari','dita','bima','sinta'], trigger:true, autoNext:'z27' },
+    z27:{ from:'me', text:'ke bukit! sekarang!', trigger:true, autoNext:'z28' },
+    z28:{ from:'sys', text:'[SISTEM] Kalian mendarat di bukit. Tim penyelamat militer menunggu. Semua selamat. Ari pulih total.', trigger:true, autoNext:'z29' },
+    z29:{ from:'sys', text:'', ending:{ type:'good', title:'Bertahan Sampai Akhir', desc:'Kamu melewati 10 rintangan berat. Semua temanmu selamat. Helikopter mendarat tepat waktu. Wabah zombie tidak mengalahkan kalian.' } }
   }
 },
 
-/* =========================================================
-   ALUR 3: CERMIN RETAK — 9 RINTANGAN
-   ========================================================= */
+/* ============ ALUR 3: CERMIN ============ */
 mirror: {
   sistem: {
     start:{
       from:'sys',
-      text:'[SISTEM] Alur 3: CERMIN RETAK\n\nPantulanmu di cermin mulai bergerak sendiri. Ia ingin keluar.\n\nAku bukan manusia. Aku pengawas.\n\n9 rintangan menanti. Kamu harus selesaikan sebelum fajar.',
-      autoNext:'s2', delay:2200
+      text:'[SISTEM] Alur 3: CERMIN RETAK\n\nPantulanmu di cermin mulai bergerak sendiri. Ia ingin keluar.\n\n9 rintangan menanti. Ketik apa saja lalu tekan ➤ untuk memulai.',
+      trigger:true, autoNext:'s2'
     },
     s2:{
       from:'sys',
-      text:'[SISTEM] PETUNJUK #1 — RINTANGAN 1/9\n\nCermin kamar mandi memantulkan 0.3 detik lebih lambat. Aku sarankan kamu periksa.\n\nBuka GB.',
+      text:'[SISTEM] PETUNJUK #1 — RINTANGAN 1/9\n\nCermin kamar mandi memantulkan 0.3 detik lebih lambat.\n\nBuka GB.',
+      trigger:true, autoNext:'s3'
+    },
+    s3:{
+      from:'sys',
+      text:'[SISTEM] Aku akan menunggumu di sini.',
       end:true
     }
   },
   gb: {
-    start:{ from:'sys', text:'[SISTEM] GB dibuka.', autoNext:'m1', delay:800 },
-    m1:{ from:'gb', sender:'ari', text:'kamu lihat cermin di kamar mandi?', cast:['kamu','ari','dita'], autoNext:'m2', delay:1200 },
-    m2:{ from:'gb', sender:'dita', text:'pantulan kamu telat bergerak. kayak ada jeda 2 detik', cast:['kamu','ari','dita'], autoNext:'m3', delay:1200 },
-    m3:{ from:'sys', text:'[SISTEM] RINTANGAN 1/9: Kamu periksa cermin. Retak dari dalam.\n\nRINTANGAN 2/9: Kamu harus tutup cermin sebelum pantulan keluar.', autoNext:'m4', delay:1600 },
-    m4:{ from:'me', text:'tutup pakai kain! sekarang!', autoNext:'m5', delay:800 },
-    m5:{ from:'sys', text:'[SISTEM] Kain bergerak. Ada yang mendorong dari dalam. Kamu harus tahan kain itu 1 menit.', autoNext:'m6', delay:1600 },
-    m6:{ from:'gb', sender:'ari', text:'aku bantu tahan!', cast:['kamu','ari','dita'], autoNext:'m7', delay:1200 },
-    m7:{ from:'sys', text:'[SISTEM] RINTANGAN 3/9: Kain jatuh. Cermin kosong. Pantulanmu hilang. Kamu harus cari di cermin lain.\n\nAda 5 cermin di rumah ini.', autoNext:'m8', delay:1700 },
-    m8:{ from:'me', text:'kita periksa satu-satu. mulai dari ruang tamu.', autoNext:'m9', delay:800 },
-    m9:{ from:'sys', text:'[SISTEM] RINTANGAN 4/9: Di cermin ruang tamu, ada bayanganmu. Tapi ia bergerak berlawanan.\n\nKamu harus sentuh cermin untuk tarik pantulanmu kembali.', autoNext:'m10', delay:1700 },
-    m10:{ from:'me', text:'(kamu sentuh cermin)', autoNext:'m11', delay:800 },
-    m11:{ from:'sys', text:'[SISTEM] Tangan keluar dari cermin. Menarikmu masuk. Kamu harus lawan.\n\nRINTANGAN 5/9: Tarik tanganmu kembali sebelum masuk sepenuhnya.', autoNext:'m12', delay:1700 },
-    m12:{ from:'gb', sender:'dita', text:'aku pegang kamu! tarik!', cast:['kamu','ari','dita'], autoNext:'m13', delay:1200 },
-    m13:{ from:'sys', text:'[SISTEM] Kalian berhasil. Pantulan tertarik keluar. Tapi ia marah. Ia berlari ke cermin kamar.\n\nRINTANGAN 6/9: Kejar pantulan sebelum ia pecahkan semua cermin.', autoNext:'m14', delay:1700 },
-    m14:{ from:'me', text:'kejar! jangan sampai dia pecahkan cermin lain!', autoNext:'m15', delay:800 },
-    m15:{ from:'sys', text:'[SISTEM] RINTANGAN 7/9: Pantulan berdiri di depan cermin besar. Ia bersiap memecahkan. Kamu harus yakinkan dia untuk tidak.', autoNext:'m16', delay:1700 },
-    m16:{ from:'me', text:'jangan. kamu bagian dari aku. kita bisa bersama.', autoNext:'m17', delay:800 },
-    m17:{ from:'sys', text:'[SISTEM] Pantulan ragu. Ia bicara: "kamu buang aku 20 tahun lalu".\n\nRINTANGAN 8/9: Kamu harus yakinkan dia bahwa kamu terima dia kembali.', autoNext:'m18', delay:1800 },
-    m18:{ from:'me', text:'aku terima kamu. kembali. kita satu.', autoNext:'m19', delay:800 },
-    m19:{ from:'sys', text:'[SISTEM] RINTANGAN 9/9: Pantulan masuk kembali ke tubuhmu. Tapi ia butuh waktu 5 menit untuk menyatu.\n\nKamu harus tahan rasa sakit. Jangan pingsan.', autoNext:'m20', delay:1800 },
-    m20:{ from:'gb', sender:'ari', text:'tahan! kami di sini!', cast:['kamu','ari','dita'], autoNext:'m21', delay:1200 },
-    m21:{ from:'sys', text:'[SISTEM] 5 menit berlalu. Pantulan menyatu. Kamu utuh kembali. Semua cermin di rumah kembali normal.\n\nGood Ending terungkap.', ending:{ type:'good', title:'Menyatu Kembali', desc:'Kamu melewati 9 rintangan. Pantulanmu kembali. Kamu utuh. Kamu menerima bagian dirimu yang pernah kamu buang. Rumah kembali tenang.' } }
+    start:{ from:'sys', text:'[SISTEM] GB dibuka. Rintangan 1/9 menantimu.', trigger:true, autoNext:'m1' },
+    m1:{ from:'gb', sender:'ari', text:'kamu lihat cermin di kamar mandi?', cast:['kamu','ari','dita'], trigger:true, autoNext:'m2' },
+    m2:{ from:'gb', sender:'dita', text:'pantulan kamu telat bergerak. kayak ada jeda 2 detik', cast:['kamu','ari','dita'], trigger:true, autoNext:'m3' },
+    m3:{ from:'sys', text:'[SISTEM] RINTANGAN 1/9: Cermin retak dari dalam. Tutup cermin sebelum pantulan keluar.', trigger:true, autoNext:'m4' },
+    m4:{ from:'me', text:'tutup pakai kain! sekarang!', trigger:true, autoNext:'m5' },
+    m5:{ from:'sys', text:'[SISTEM] RINTANGAN 2/9: Kain bergerak. Ada yang mendorong dari dalam. Tahan 1 menit.', trigger:true, autoNext:'m6' },
+    m6:{ from:'gb', sender:'ari', text:'aku bantu tahan!', cast:['kamu','ari','dita'], trigger:true, autoNext:'m7' },
+    m7:{ from:'sys', text:'[SISTEM] RINTANGAN 3/9: Kain jatuh. Cermin kosong. Pantulanmu hilang. Cari di 5 cermin rumah.', trigger:true, autoNext:'m8' },
+    m8:{ from:'me', text:'kita periksa satu-satu. mulai dari ruang tamu.', trigger:true, autoNext:'m9' },
+    m9:{ from:'sys', text:'[SISTEM] RINTANGAN 4/9: Di cermin ruang tamu, bayanganmu bergerak berlawanan. Sentuh cermin untuk tarik kembali.', trigger:true, autoNext:'m10' },
+    m10:{ from:'me', text:'(kamu sentuh cermin)', trigger:true, autoNext:'m11' },
+    m11:{ from:'sys', text:'[SISTEM] RINTANGAN 5/9: Tangan keluar dari cermin. Menarikmu masuk. Lawan!', trigger:true, autoNext:'m12' },
+    m12:{ from:'gb', sender:'dita', text:'aku pegang kamu! tarik!', cast:['kamu','ari','dita'], trigger:true, autoNext:'m13' },
+    m13:{ from:'sys', text:'[SISTEM] RINTANGAN 6/9: Pantulan tertarik keluar. Ia berlari ke cermin kamar. Kejar sebelum ia pecahkan semua cermin!', trigger:true, autoNext:'m14' },
+    m14:{ from:'me', text:'kejar! jangan sampai dia pecahkan cermin lain!', trigger:true, autoNext:'m15' },
+    m15:{ from:'sys', text:'[SISTEM] RINTANGAN 7/9: Pantulan di depan cermin besar. Bersiap memecahkan. Yakinkan dia untuk tidak.', trigger:true, autoNext:'m16' },
+    m16:{ from:'me', text:'jangan. kamu bagian dari aku. kita bisa bersama.', trigger:true, autoNext:'m17' },
+    m17:{ from:'sys', text:'[SISTEM] RINTANGAN 8/9: Pantulan ragu. Ia bicara: "kamu buang aku 20 tahun lalu". Yakinkan dia.', trigger:true, autoNext:'m18' },
+    m18:{ from:'me', text:'aku terima kamu. kembali. kita satu.', trigger:true, autoNext:'m19' },
+    m19:{ from:'sys', text:'[SISTEM] RINTANGAN 9/9: Pantulan masuk kembali. Butuh 5 menit menyatu. Tahan rasa sakit.', trigger:true, autoNext:'m20' },
+    m20:{ from:'gb', sender:'ari', text:'tahan! kami di sini!', cast:['kamu','ari','dita'], trigger:true, autoNext:'m21' },
+    m21:{ from:'sys', text:'[SISTEM] 5 menit berlalu. Pantulan menyatu. Kamu utuh. Semua cermin normal kembali.', trigger:true, autoNext:'m22' },
+    m22:{ from:'sys', text:'', ending:{ type:'good', title:'Menyatu Kembali', desc:'Kamu melewati 9 rintangan. Pantulanmu kembali. Kamu utuh. Kamu menerima bagian dirimu yang pernah kamu buang.' } }
   }
 },
 
-/* =========================================================
-   ALUR 4: SEKOLAH TERBENGKALAI — 11 RINTANGAN
-   ========================================================= */
+/* ============ ALUR 4: SEKOLAH ============ */
 school: {
   sistem: {
     start:{
       from:'sys',
-      text:'[SISTEM] Alur 4: SEKOLAH TERBENGKALAI\n\nKalian masuk ke sekolah 20 tahun ditutup. Pintu terkunci dari luar.\n\nAku bukan manusia. Aku pengawas.\n\n11 rintangan menanti sebelum pintu keluar terbuka. Siap?',
-      autoNext:'s2', delay:2200
+      text:'[SISTEM] Alur 4: SEKOLAH TERBENGKALAI\n\nKalian masuk ke sekolah 20 tahun ditutup. Pintu terkunci.\n\n11 rintangan menanti. Ketik apa saja lalu tekan ➤ untuk memulai.',
+      trigger:true, autoNext:'s2'
     },
     s2:{
       from:'sys',
-      text:'[SISTEM] PETUNJUK #1 — RINTANGAN 1/11\n\nBel sekolah berbunyi jam 11 malam. Ruang kepala sekolah terbuka. Kalian harus periksa.\n\nBuka GB.',
+      text:'[SISTEM] PETUNJUK #1 — RINTANGAN 1/11\n\nBel sekolah berbunyi jam 11 malam. Ruang kepala sekolah terbuka.\n\nBuka GB.',
+      trigger:true, autoNext:'s3'
+    },
+    s3:{
+      from:'sys',
+      text:'[SISTEM] Aku akan menunggumu di sini.',
       end:true
     }
   },
   gb: {
-    start:{ from:'sys', text:'[SISTEM] GB dibuka.', autoNext:'s1', delay:800 },
-    s1:{ from:'gb', sender:'bima', text:'pintu gak bisa dibuka. kita terjebak', cast:['kamu','ari','bima','naya'], autoNext:'s2', delay:1200 },
-    s2:{ from:'gb', sender:'naya', text:'lampu mati. bel berbunyi terus', cast:['kamu','ari','bima','naya'], autoNext:'s3', delay:1200 },
-    s3:{ from:'sys', text:'[SISTEM] RINTANGAN 1/11: Kalian ikuti suara bel. Sampai di ruang kepala sekolah. Ada 7 kursi kosong. Foto kalian dengan tanggal hari ini.', autoNext:'s4', delay:1600 },
-    s4:{ from:'gb', sender:'ari', text:'di belakang foto ada tulisan: "kalian akan tinggal di sini selamanya"', cast:['kamu','ari','bima','naya'], autoNext:'s5', delay:1300 },
-    s5:{ from:'me', text:'jangan panik. kita cari jalan keluar.', autoNext:'s6', delay:800 },
-    s6:{ from:'sys', text:'[SISTEM] RINTANGAN 2/11: Lampu mati total. Kalian harus nyalakan genset di basement.\n\nWaktu 15 menit sebelum pintu basement terkunci otomatis.', autoNext:'s7', delay:1700 },
-    s7:{ from:'me', text:'ke basement! cepat!', autoNext:'s8', delay:800 },
-    s8:{ from:'sys', text:'[SISTEM] RINTANGAN 3/11: Di basement ada suara aneh. Kalian harus lewati tanpa menyalakan lampu. Ada sesuatu di sana.', autoNext:'s9', delay:1700 },
-    s9:{ from:'gb', sender:'bima', text:'aku dengar suara napas. bukan suara kita', cast:['kamu','ari','bima','naya'], autoNext:'s10', delay:1300 },
-    s10:{ from:'me', text:'jangan nyalakan apa-apa. jalan pelan.', autoNext:'s11', delay:800 },
-    s11:{ from:'sys', text:'[SISTEM] RINTANGAN 4/11: Kalian sampai genset. Bensin habis. Kalian harus isi bensin dari jerigen di sudut. Ada 3 jerigen, cuma 1 yang isi.\n\nWaktu 5 menit.', autoNext:'s12', delay:1800 },
-    s12:{ from:'me', text:'periksa satu-satu. cepat.', autoNext:'s13', delay:800 },
-    s13:{ from:'sys', text:'[SISTEM] RINTANGAN 5/11: Jerigen ketemu. Genset nyala. Lampu hidup. Tapi pintu basement terkunci.\n\nKalian harus cari kunci di ruang guru.', autoNext:'s14', delay:1700 },
-    s14:{ from:'gb', sender:'naya', text:'ruang guru di lantai 2. kita harus naik tangga.', cast:['kamu','ari','bima','naya'], autoNext:'s15', delay:1300 },
-    s15:{ from:'sys', text:'[SISTEM] RINTANGAN 6/11: Di tangga ada yang menghalangi. Kursi berjatuhan. Kalian harus lewati hati-hati.\n\nSuara langkah di lantai atas.', autoNext:'s16', delay:1700 },
-    s16:{ from:'me', text:'jangan berisik. jalan pelan-pelan.', autoNext:'s17', delay:800 },
-    s17:{ from:'sys', text:'[SISTEM] RINTANGAN 7/11: Kalian sampai ruang guru. Kunci ada di laci. Tapi ada 10 laci. Kalian harus cari cepat.\n\nWaktu 10 menit sebelum ada yang datang.', autoNext:'s18', delay:1800 },
-    s18:{ from:'gb', sender:'ari', text:'ketemu! ayo turun!', cast:['kamu','ari','bima','naya'], autoNext:'s19', delay:1200 },
-    s19:{ from:'sys', text:'[SISTEM] RINTANGAN 8/11: Kalian turun. Pintu basement terbuka. Tapi ada seseorang di sana. Bukan teman kalian.\n\nKalian harus sembunyi sampai ia pergi.', autoNext:'s20', delay:1700 },
-    s20:{ from:'me', text:'sembunyi di lemari. jangan bersuara.', autoNext:'s21', delay:800 },
-    s21:{ from:'sys', text:'[SISTEM] RINTANGAN 9/11: Ia pergi. Kalian keluar. Ada pintu darurat di ujung lorong. Terkunci. Butuh kode 6 digit.\n\nKode tertulis di foto tadi. Kamu harus ingat.', autoNext:'s22', delay:1800 },
-    s22:{ from:'me', text:'kode: 210528. dari foto.', autoNext:'s23', delay:800 },
-    s23:{ from:'sys', text:'[SISTEM] RINTANGAN 10/11: Pintu terbuka. Tapi ada 10 orang di luar. Semuanya memegang kapak.\n\nKalian harus lari ke pintu belakang.', autoNext:'s24', delay:1700 },
-    s24:{ from:'gb', sender:'bima', text:'pintu belakang! ke kiri!', cast:['kamu','ari','bima','naya'], autoNext:'s25', delay:1200 },
-    s25:{ from:'sys', text:'[SISTEM] RINTANGAN 11/11: Pintu belakang terkunci. Kalian harus dorong pintu sekuat tenaga sebelum mereka sampai.', autoNext:'s26', delay:1700 },
-    s26:{ from:'me', text:'dorong! sekarang!', autoNext:'s27', delay:800 },
-    s27:{ from:'sys', text:'[SISTEM] Pintu terbuka. Kalian keluar. Sekolah lenyap dari pandangan. Kalian selamat.\n\nGood Ending terungkap.', ending:{ type:'good', title:'Keluar dari Kegelapan', desc:'Kamu melewati 11 rintangan. Kalian keluar dari sekolah tanpa ada yang hilang. Sekolah lenyap dari pandangan. Kalian kembali ke dunia nyata.' } }
+    start:{ from:'sys', text:'[SISTEM] GB dibuka. Rintangan 1/11 menantimu.', trigger:true, autoNext:'s1' },
+    s1:{ from:'gb', sender:'bima', text:'pintu gak bisa dibuka. kita terjebak', cast:['kamu','ari','bima','naya'], trigger:true, autoNext:'s2' },
+    s2:{ from:'gb', sender:'naya', text:'lampu mati. bel berbunyi terus', cast:['kamu','ari','bima','naya'], trigger:true, autoNext:'s3' },
+    s3:{ from:'sys', text:'[SISTEM] RINTANGAN 1/11: Ikuti suara bel. Sampai di ruang kepala sekolah. 7 kursi kosong. Foto kalian dengan tanggal hari ini.', trigger:true, autoNext:'s4' },
+    s4:{ from:'gb', sender:'ari', text:'di belakang foto ada tulisan: "kalian akan tinggal di sini selamanya"', cast:['kamu','ari','bima','naya'], trigger:true, autoNext:'s5' },
+    s5:{ from:'me', text:'jangan panik. kita cari jalan keluar.', trigger:true, autoNext:'s6' },
+    s6:{ from:'sys', text:'[SISTEM] RINTANGAN 2/11: Lampu mati total. Nyalakan genset di basement. Waktu 15 menit.', trigger:true, autoNext:'s7' },
+    s7:{ from:'me', text:'ke basement! cepat!', trigger:true, autoNext:'s8' },
+    s8:{ from:'sys', text:'[SISTEM] RINTANGAN 3/11: Di basement ada suara aneh. Lewati tanpa menyalakan lampu.', trigger:true, autoNext:'s9' },
+    s9:{ from:'gb', sender:'bima', text:'aku dengar suara napas. bukan suara kita', cast:['kamu','ari','bima','naya'], trigger:true, autoNext:'s10' },
+    s10:{ from:'me', text:'jangan nyalakan apa-apa. jalan pelan.', trigger:true, autoNext:'s11' },
+    s11:{ from:'sys', text:'[SISTEM] RINTANGAN 4/11: Genset. Bensin habis. Ada 3 jerigen, cuma 1 isi. Waktu 5 menit.', trigger:true, autoNext:'s12' },
+    s12:{ from:'me', text:'periksa satu-satu. cepat.', trigger:true, autoNext:'s13' },
+    s13:{ from:'sys', text:'[SISTEM] RINTANGAN 5/11: Genset nyala. Pintu basement terkunci. Cari kunci di ruang guru.', trigger:true, autoNext:'s14' },
+    s14:{ from:'gb', sender:'naya', text:'ruang guru di lantai 2. kita harus naik tangga.', cast:['kamu','ari','bima','naya'], trigger:true, autoNext:'s15' },
+    s15:{ from:'sys', text:'[SISTEM] RINTANGAN 6/11: Kursi berjatuhan di tangga. Lewati hati-hati. Suara langkah di atas.', trigger:true, autoNext:'s16' },
+    s16:{ from:'me', text:'jangan berisik. jalan pelan-pelan.', trigger:true, autoNext:'s17' },
+    s17:{ from:'sys', text:'[SISTEM] RINTANGAN 7/11: Ruang guru. Kunci di 10 laci. Cari cepat. Waktu 10 menit.', trigger:true, autoNext:'s18' },
+    s18:{ from:'gb', sender:'ari', text:'ketemu! ayo turun!', cast:['kamu','ari','bima','naya'], trigger:true, autoNext:'s19' },
+    s19:{ from:'sys', text:'[SISTEM] RINTANGAN 8/11: Pintu basement terbuka. Ada seseorang di sana. Bukan teman kalian. Sembunyi.', trigger:true, autoNext:'s20' },
+    s20:{ from:'me', text:'sembunyi di lemari. jangan bersuara.', trigger:true, autoNext:'s21' },
+    s21:{ from:'sys', text:'[SISTEM] RINTANGAN 9/11: Ia pergi. Pintu darurat di ujung lorong. Butuh kode 6 digit. Kode dari foto tadi.', trigger:true, autoNext:'s22' },
+    s22:{ from:'me', text:'kode: 210528. dari foto.', trigger:true, autoNext:'s23' },
+    s23:{ from:'sys', text:'[SISTEM] RINTANGAN 10/11: Pintu terbuka. Tapi ada 10 orang di luar. Semuanya kapak. Lari ke pintu belakang!', trigger:true, autoNext:'s24' },
+    s24:{ from:'gb', sender:'bima', text:'pintu belakang! ke kiri!', cast:['kamu','ari','bima','naya'], trigger:true, autoNext:'s25' },
+    s25:{ from:'sys', text:'[SISTEM] RINTANGAN 11/11: Pintu belakang terkunci. Dorong pintu sekuat tenaga!', trigger:true, autoNext:'s26' },
+    s26:{ from:'me', text:'dorong! sekarang!', trigger:true, autoNext:'s27' },
+    s27:{ from:'sys', text:'[SISTEM] Pintu terbuka. Kalian keluar. Sekolah lenyap dari pandangan. Kalian selamat.', trigger:true, autoNext:'s28' },
+    s28:{ from:'sys', text:'', ending:{ type:'good', title:'Keluar dari Kegelapan', desc:'Kamu melewati 11 rintangan. Kalian keluar dari sekolah tanpa ada yang hilang. Kalian kembali ke dunia nyata.' } }
   }
 }
 
@@ -612,8 +779,8 @@ school: {
 let currentStoryId = null;
 let currentChat = null;
 let chatState = {
-  sistem: { started: false, finished: false, history: [] },
-  gb:     { started: false, finished: false, history: [] }
+  sistem: { node:'start', started: false, finished: false, history: [], waiting: false },
+  gb:     { node:'start', started: false, finished: false, history: [], waiting: false }
 };
 
 /* =========================================================
@@ -642,8 +809,8 @@ function pickStory(id){
   passcode = '';
   updateDots();
   chatState = {
-    sistem: { started: false, finished: false, history: [] },
-    gb:     { started: false, finished: false, history: [] }
+    sistem: { node:'start', started: false, finished: false, history: [], waiting: false },
+    gb:     { node:'start', started: false, finished: false, history: [], waiting: false }
   };
 }
 
@@ -723,7 +890,6 @@ const APP_DATA = {
   notes: { title:"Notes", html:`
     <div class="section-label">Today</div>
     <div class="note-item"><div class="n-top">survival log <span>23:58</span></div><div class="n-snip">kalau aku gak selamat, tolong cari tahu siapa pembunuh di antara kami.</div><div class="n-date">Notes</div></div>
-    <div class="note-item"><div class="n-top">jangan tidur <span>03:12</span></div><div class="n-snip">ada yang berjalan di luar tenda. aku dengar langkah kaki.</div><div class="n-date">Notes</div></div>
   `},
   photos: { title:"Photos", html:`
     <div class="photo-grid">
@@ -746,12 +912,9 @@ const APP_DATA = {
   `},
   files: { title:"Files", html:`
     <div class="note-item"><div class="n-top">📄 case_file.pdf</div><div class="n-snip">17 Aug · SISTEM</div></div>
-    <div class="note-item"><div class="n-top">📁 Dump</div><div class="n-snip">37 items</div></div>
   `},
   gmail: { title:"Gmail", html:`
-    <div class="section-label">Primary</div>
-    <div class="note-item"><div class="n-top">SISTEM <span>21:05</span></div><div class="n-snip">aku tahu kamu di mana. jangan bergerak.</div></div>
-    <div class="note-item"><div class="n-top">GB <span>20:30</span></div><div class="n-snip">kita harus ngomong. sekarang.</div></div>
+    <div class="note-item"><div class="n-top">SISTEM <span>21:05</span></div><div class="n-snip">aku tahu kamu di mana.</div></div>
   `},
   call: { title:"Phone", html:`
     <div class="call-screen">
@@ -768,8 +931,7 @@ const APP_DATA = {
     <div class="safari-bar"><span>🔒</span><input value="unknown.rinai.workers.dev" readonly></div>
     <div class="glitch-title">UNKNOWN</div>
     <div class="horror-text">
-      <p>tolong sertakan credit <b style="color:#fff;">@midtales</b> dari x jika ingin share au ini.</p>
-      <p class="warn">⚠ 5 checkpoint tersedia di aplikasi safari.</p>
+      <p>tolong sertakan credit <b style="color:#fff;">@midtales</b> dari x.</p>
     </div>
   `},
   weather: { title:"Weather", html:`
@@ -787,7 +949,6 @@ const APP_DATA = {
   `},
   settings: { title:"Settings", html:`
     <div class="note-item"><div class="n-top">👤 Survivor</div><div class="n-snip">Apple Account, iCloud</div></div>
-    <div class="note-item"><div class="n-top">📶 Wi-Fi</div><div class="n-snip">Connected to "UNKNOWN"</div></div>
     <div class="note-item"><div class="n-top">📱 General</div><div class="n-snip">Version 21.05</div></div>
   `}
 };
@@ -869,7 +1030,7 @@ function escapeHtml(str){
 }
 
 /* =========================================================
-   OPEN CHAT
+   OPEN CHAT — trigger-based
    ========================================================= */
 function openChat(which){
   currentChat = which;
@@ -926,15 +1087,16 @@ function openChat(which){
   input.addEventListener('keydown', (e)=>{
     if(e.key === 'Enter' && !e.shiftKey){
       e.preventDefault();
-      if(input.value.trim()) sendUserMessage();
+      if(input.value.trim() && !sendBtn.disabled) sendUserMessage();
     }
   });
   sendBtn.addEventListener('click', sendUserMessage);
 
   function sendUserMessage(){
+    if(state.finished) return;
     const txt = input.value.trim();
     if(!txt) return;
-    // Tampilkan teks PLAYER
+    // Tampilkan teks player (asli)
     appendBubble('me', txt);
     state.history.push({type:'bubble', from:'me', text: txt});
     input.value = '';
@@ -942,26 +1104,28 @@ function openChat(which){
     sendBtn.disabled = true;
     chatBody.scrollTop = chatBody.scrollHeight;
 
-    // Setelah 400ms, tampilkan TEKS NASKAH HTML (bukan teks player)
-    // Supaya player merasa interaktif tapi naskah tetap diatur
-    setTimeout(()=>{
-      const narrativeReplies = [
-        '(Kamu mengirim pesan. Sistem meneruskan naskah...)',
-        '(Kata-katamu tersimpan. Cerita berlanjut...)',
-        '(Pesanmu diterima. Naskah berjalan...)'
-      ];
-      const reply = narrativeReplies[Math.floor(Math.random() * narrativeReplies.length)];
-      appendBubble('me', reply);
-      state.history.push({type:'bubble', from:'me', text: reply});
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }, 400);
+    // Kalau sedang menunggu trigger → lanjut ke node berikutnya
+    if(state.waiting){
+      state.waiting = false;
+      const nextNode = state.currentNode.autoNext;
+      if(nextNode){
+        setTimeout(()=> playNode(chatData, nextNode, chatBody), 500);
+      }
+      return;
+    }
   }
 
-  if(state.history.length === 0 && !state.started){
+  // Kalau belum mulai, mainkan node start
+  if(!state.started && !state.finished){
     state.started = true;
-    setTimeout(()=> runNode(chatData, 'start', chatBody), 300);
+    state.node = 'start';
+    setTimeout(()=> playNode(chatData, 'start', chatBody), 300);
   } else {
     chatBody.scrollTop = chatBody.scrollHeight;
+    // Kalau sedang menunggu trigger, restore state
+    if(state.waiting && state.currentNode){
+      // biarkan input aktif
+    }
   }
 }
 
@@ -1076,62 +1240,91 @@ function showEnding(ending, noScroll){
 function restartAll(){
   if(!currentStoryId) return;
   chatState = {
-    sistem: { started: false, finished: false, history: [] },
-    gb:     { started: false, finished: false, history: [] }
+    sistem: { node:'start', started: false, finished: false, history: [], waiting: false },
+    gb:     { node:'start', started: false, finished: false, history: [], waiting: false }
   };
   closeApp();
   setTimeout(()=>openApp('messages'), 200);
 }
 
 /* =========================================================
-   RUN NODE (AUTO, tanpa pilihan)
+   PLAY NODE — TAMPILKAN TEKS, LALU TUNGGU TRIGGER
+   =========================================================
+   - Node ditampilkan (bubble, image, cast)
+   - Jika node.trigger = true → set waiting = true, tunggu player tekan send
+   - Jika player tekan send → lanjut ke node.autoNext
    ========================================================= */
-function runNode(chatData, nodeId, body){
+function playNode(chatData, nodeId, body){
   const node = chatData[nodeId];
   if(!node) return;
   const from = node.from;
   const opts = { sender: node.sender };
   const state = chatState[currentChat];
+  state.node = nodeId;
+  state.currentNode = node;
 
+  // render cast
   if(node.cast && node.cast.length){
     appendCast(node.cast);
     state.history.push({type:'cast', cast: node.cast});
   }
 
-  if(from === 'me'){
-    appendBubble('me', node.text);
-    state.history.push({type:'bubble', from:'me', text:node.text});
-    afterBubble();
-  } else if(from === 'sys'){
-    appendBubble('sys', node.text);
-    state.history.push({type:'bubble', from:'sys', text:node.text});
-    afterBubble();
-  } else {
-    showTyping();
-    setTimeout(()=>{
-      hideTyping();
-      appendBubble(from, node.text, opts);
-      state.history.push({type:'bubble', from, text:node.text, sender: node.sender});
-      if(node.image){
-        setTimeout(()=>{
-          appendImage(node.image, node.imageCaption);
-          state.history.push({type:'image', url:node.image, caption:node.imageCaption});
-          setTimeout(afterBubble, 700);
-        }, 400);
-      } else {
-        afterBubble();
-      }
-    }, 700 + Math.random()*500);
+  // Kalau node punya text, tampilkan
+  if(node.text){
+    if(from === 'me'){
+      appendBubble('me', node.text);
+      state.history.push({type:'bubble', from:'me', text:node.text});
+    } else if(from === 'sys'){
+      appendBubble('sys', node.text);
+      state.history.push({type:'bubble', from:'sys', text:node.text});
+    } else {
+      showTyping();
+      setTimeout(()=>{
+        hideTyping();
+        appendBubble(from, node.text, opts);
+        state.history.push({type:'bubble', from, text:node.text, sender: node.sender});
+        if(node.image){
+          setTimeout(()=>{
+            appendImage(node.image, node.imageCaption);
+            state.history.push({type:'image', url:node.image, caption:node.imageCaption});
+            setTimeout(handleAfterBubble, 700);
+          }, 400);
+        } else {
+          handleAfterBubble();
+        }
+      }, 600 + Math.random()*400);
+      return;
+    }
+    // untuk 'me' dan 'sys', render langsung
+    if(node.image){
+      setTimeout(()=>{
+        appendImage(node.image, node.imageCaption);
+        state.history.push({type:'image', url:node.image, caption:node.imageCaption});
+        setTimeout(handleAfterBubble, 700);
+      }, 400);
+    } else {
+      handleAfterBubble();
+    }
+    return;
   }
 
-  function afterBubble(){
+  // Node tanpa text (ending)
+  handleAfterBubble();
+
+  function handleAfterBubble(){
     if(node.ending){
       showEnding(node.ending);
       state.history.push({type:'ending', ending: node.ending});
-    } else if(node.autoNext){
-      setTimeout(()=>runNode(chatData, node.autoNext, body), node.delay || 1200);
+      state.finished = true;
     } else if(node.end){
       state.finished = true;
+    } else if(node.trigger){
+      // TUNGGU PLAYER TEKAN SEND
+      state.waiting = true;
+      state.currentNode = node;
+    } else if(node.autoNext){
+      // auto-lanjut tanpa trigger
+      setTimeout(()=> playNode(chatData, node.autoNext, body), node.delay || 1200);
     }
   }
 }
